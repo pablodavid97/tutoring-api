@@ -3,7 +3,8 @@ const bodyParser = require('body-parser');
 const { http, log } = require('winston');
 const HttpStatusCode = require('http-status-codes');
 const { logger, expressLogger } = require('./utils/logger');
-const connect = require('./model/connection-manager');
+const database = require('./models/connection-manager');
+const usuarioController = require('./controllers/usuario.controller');
 
 require('dotenv').config();
 const hostname = '127.0.0.1'
@@ -31,15 +32,10 @@ const errorHandler = (err, req, res, next) => {
 app.use(errorHandler);
 
 // Routes
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-});
+app.use(require('./routes/index'))
 
-app.get('/v1/status', (req, res) => {
-  res.json({ time: new Date() });
-});
-
-connect().then(
+// DB Connection
+database.connect().then(
   app.listen(port, hostname, () => {
     logger.info(`Server listening at http://${hostname}:${port}/`);
   })
