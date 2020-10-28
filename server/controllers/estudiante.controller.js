@@ -10,7 +10,7 @@ estudianteController.getEstudianteById = async (estudianteId) => {
 
         return row;
     } catch (error) {
-        console.error(error.message);
+        logger.error(error.message);
     }
 }
 

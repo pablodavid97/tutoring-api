@@ -24,6 +24,9 @@ database.usuario = require('./entities/usuario.model')(database.sequelize);
 database.rol = require('./entities/rol.model')(database.sequelize);
 database.estudiante = require('./entities/estudiante.model')(database.sequelize);
 database.profesor = require('./entities/profesor.model')(database.sequelize);
+database.estudianteView = require('./entities/estudiante-view.model')(database.sequelize);
+database.profesorView = require('./entities/profesor-view.model')(database.sequelize);
+database.reunionView = require('./entities/reunion-view.model')(database.sequelize);
 
 // establece las relaciones entre las entidades
 

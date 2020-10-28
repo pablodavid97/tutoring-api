@@ -1,3 +1,4 @@
+const { logger } = require('../utils/logger');
 const database = require('../models/connection-manager')
 const usuario = database.usuario
 const rol = database.rol
@@ -14,7 +15,7 @@ usuarioController.getUserById = async (userId) => {
 
         return rows
     } catch (error) {
-        console.error(error.message);
+        logger.error(error.message);
     }
 }
 
@@ -25,7 +26,7 @@ usuarioController.getAllUsers = async () => {
   
       return users
     } catch(error) {
-      console.error(error.message);
+      logger.error(error.message);
     }
   } 
   
@@ -35,7 +36,7 @@ usuarioController.getAllUsers = async () => {
       const userRoles = await usuario.findAll({include: [{model: rol}]});
       return userRoles
     } catch(error) {
-      console.error(error.message);
+      logger.error(error.message);
     }
   }
 
