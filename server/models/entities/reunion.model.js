@@ -1,40 +1,37 @@
-const {DataTypes} = require('sequelize')
+const { Sequelize, DataTypes} = require('sequelize')
 
 module.exports = (sequelize) => {
-    const Estudiante = sequelize.define('Estudiante', {
+    const Reunion = sequelize.define('Reunion', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true
         },
-        carrera: {
-            type: DataTypes.STRING,
-        }, 
-        gpa: {
-            type: DataTypes.FLOAT
-        },
-        status: {
-            type: DataTypes.STRING
-        },
-        periodoDeAdmision: {
-            type: DataTypes.STRING
-        },
-        tipoDeAdmision: {
+        tema: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        horario: {
+        descripcion: {
             type: DataTypes.STRING
         },
-        progresoDeCarrera: {
+        fecha: {
+            type: DataTypes.DATE,
+            allowNull: false
+        },
+        comentarios_estudiante: {
+            type: DataTypes.STRING
+        },
+        comentarios_profesor: {
+            type: DataTypes.STRING
+        },
+        semestre: {
             type: DataTypes.STRING
         }
     }, {
         underscored: true,
-        tableName: 'estudiante',
+        tableName: 'reunion',
         timestamps: false,
     });
 
-    return Estudiante;
-
+    return Reunion;
 }

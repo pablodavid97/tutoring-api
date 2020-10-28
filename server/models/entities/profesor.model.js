@@ -8,13 +8,14 @@ module.exports = (sequelize) => {
             primaryKey: true
         },
         carrera: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            allowNull: false
         }
-    },{
+    }, {
         underscored: true,
         tableName: 'profesor',
         timestamps: false,
     });
 
-    return Profesor
+    return Profesor;
 }

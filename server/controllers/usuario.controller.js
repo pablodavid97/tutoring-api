@@ -40,4 +40,5 @@ usuarioController.getAllUsers = async () => {
     }
   }
 
-  module.exports = usuarioController;
+
+module.exports = usuarioController;

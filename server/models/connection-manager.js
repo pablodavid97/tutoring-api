@@ -19,11 +19,13 @@ const sequelize = new Sequelize(databaseConfig.database, databaseConfig.user, da
 database.sequelize = sequelize
 // database.Sequelize = Sequelize
 
-
 database.usuario = require('./entities/usuario.model')(database.sequelize);
 database.rol = require('./entities/rol.model')(database.sequelize);
-database.estudiante = require('./entities/estudiante.model')(database.sequelize);
+database.estado = require('./entities/estado.model')(database.sequelize);
+database.decano = require('./entities/decano.model')(database.sequelize);
 database.profesor = require('./entities/profesor.model')(database.sequelize);
+database.estudiante = require('./entities/estudiante.model')(database.sequelize);
+database.reunion = require('./entities/reunion.model')(database.sequelize);
 database.estudianteView = require('./entities/estudiante-view.model')(database.sequelize);
 database.profesorView = require('./entities/profesor-view.model')(database.sequelize);
 database.reunionView = require('./entities/reunion-view.model')(database.sequelize);
@@ -31,20 +33,33 @@ database.reunionView = require('./entities/reunion-view.model')(database.sequeli
 // establece las relaciones entre las entidades
 
 // relacion usuario-rol (muchos a uno)
-database.usuario.belongsTo(database.rol);
 database.rol.hasMany(database.usuario, {as: "usuarios"});
+database.usuario.belongsTo(database.rol, {as: "rol"});
 
 // relaciones uno a uno
-database.usuario.hasOne(database.estudiante);
-database.estudiante.belongsTo(database.usuario)
+database.usuario.hasMany(database.decano, {as: "decano"});
+database.decano.belongsTo(database.usuario, {as: "usuario"})
 
-database.usuario.hasOne(database.profesor);
-database.profesor.belongsTo(database.usuario);
+database.usuario.hasMany(database.profesor, {as: "profesor"});
+database.profesor.belongsTo(database.usuario, {as: "usuario"})
 
-// relacion estudiante-profesor (muchos a uno)
-database.estudiante.belongsTo(database.profesor);
-database.profesor.hasMany(database.estudiante, {as: "estudiantes"});
+database.usuario.hasMany(database.estudiante, {as: "estudiante"});
+database.estudiante.belongsTo(database.usuario, {as: "usuario"});
 
+// relacion profesor-estudiante
+database.profesor.hasMany(database.estudiante, {as:"estudiante"});
+database.estudiante.belongsTo(database.profesor, {as: "profesor"});
+
+// relacion reunion-estado
+database.estado.hasMany(database.reunion, {as:"reunion"});
+database.reunion.belongsTo(database.estado, {as: "estado"});
+
+// relacion reunion-profesor-estudiante
+database.profesor.hasMany(database.reunion, {as:"reunion"});
+database.reunion.belongsTo(database.profesor, {as: "profesor"});
+
+database.estudiante.hasMany(database.reunion, {as:"reunion"});
+database.reunion.belongsTo(database.estudiante, {as: "estudiante"});
 
 // CONNECTION
 database.connect = async () => {

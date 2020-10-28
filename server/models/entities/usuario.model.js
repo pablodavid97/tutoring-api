@@ -3,7 +3,7 @@ const { Sequelize, DataTypes} = require('sequelize');
 module.exports = (sequelize) => {
     const Usuario = sequelize.define('Usuario', {
         id: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true
         },
@@ -11,7 +11,8 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
         },
         correoInstitucional: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            allowNull: false
         },
         hash: {
             type: DataTypes.STRING
@@ -24,13 +25,15 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING
         },
         correoPersonal: {
-           type: DataTypes.STRING 
+           type: DataTypes.STRING,
+           allowNull: false 
         },
         telefono: {
             type: DataTypes.STRING
         },
         firstTimeLogin: {
-            type: DataTypes.TINYINT
+            type: DataTypes.TINYINT,
+            allowNull: false
         },
     }, {
         underscored: true,

@@ -14,5 +14,4 @@ estudianteController.getEstudianteById = async (estudianteId) => {
     }
 }
 
-
-module.exports = estudianteController
+module.exports = estudianteController;
