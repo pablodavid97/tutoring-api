@@ -6,15 +6,13 @@ const usuarioController = {}
 // DB QUERIES
 
 // FIND BY ID 
-usuarioController.findById = async (userId) => {
+usuarioController.getUserById = async (userId) => {
     try{
-        const rows = await usuario.findAll({
-            where: {
-                usuario_id: userId
-            }
-        });
+        const rows = await usuario.findByPk(userId)
 
-        return rows[0]
+        console.log("Usuario: ", rows);
+
+        return rows
     } catch (error) {
         console.error(error.message);
     }

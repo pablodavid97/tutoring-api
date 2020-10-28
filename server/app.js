@@ -8,7 +8,7 @@ const usuarioController = require('./controllers/usuario.controller');
 
 require('dotenv').config();
 const hostname = '127.0.0.1'
-const port = process.env.API_SERVER_PORT || 9000;
+const port = process.env.API_SERVER_PORT || 3000;
 const environment = process.env.NODE_SERVER_ENV;
 const app = express();
 

@@ -19,11 +19,29 @@ const sequelize = new Sequelize(databaseConfig.database, databaseConfig.user, da
 database.sequelize = sequelize
 // database.Sequelize = Sequelize
 
+
 database.usuario = require('./entities/usuario.model')(database.sequelize);
 database.rol = require('./entities/rol.model')(database.sequelize);
+database.estudiante = require('./entities/estudiante.model')(database.sequelize);
+database.profesor = require('./entities/profesor.model')(database.sequelize);
 
+// establece las relaciones entre las entidades
+
+// relacion usuario-rol (muchos a uno)
 database.usuario.belongsTo(database.rol);
 database.rol.hasMany(database.usuario, {as: "usuarios"});
+
+// relaciones uno a uno
+database.usuario.hasOne(database.estudiante);
+database.estudiante.belongsTo(database.usuario)
+
+database.usuario.hasOne(database.profesor);
+database.profesor.belongsTo(database.usuario);
+
+// relacion estudiante-profesor (muchos a uno)
+database.estudiante.belongsTo(database.profesor);
+database.profesor.hasMany(database.estudiante, {as: "estudiantes"});
+
 
 // CONNECTION
 database.connect = async () => {
