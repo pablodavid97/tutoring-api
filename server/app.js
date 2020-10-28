@@ -4,6 +4,7 @@ const { http, log } = require('winston');
 const HttpStatusCode = require('http-status-codes');
 const { logger, expressLogger } = require('./utils/logger');
 const database = require('./models/connection-manager');
+const usuarioController = require('./controllers/usuario.controller');
 
 require('dotenv').config();
 const hostname = '127.0.0.1'
