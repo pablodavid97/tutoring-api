@@ -160,13 +160,13 @@ router.get('/reuniones', async (req, res) => {
 
 //Rol
 router.get('/roles', async (req, res) => {
-    let role = await rolController.find()
+    let role = await rolController.getRolById(1)
     res.json(role)
   });
 
 //Usuario
 router.get('/usuarios', async (req, res) => {
-    let users = await usuarioController.find()
+    let users = await usuarioController.getAllUsers()
     res.json(users)
   });
 
