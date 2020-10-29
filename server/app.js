@@ -4,6 +4,7 @@ const { http, log } = require('winston');
 const HttpStatusCode = require('http-status-codes');
 const { logger, expressLogger } = require('./utils/logger');
 const database = require('./models/connection-manager');
+const path = require('path');
 const usuarioController = require('./controllers/usuario.controller');
 
 require('dotenv').config();
@@ -14,6 +15,12 @@ const app = express();
 
 // SETTINGS
 app.set('port', port)
+app.set('views', path.join(__dirname, 'views'));
+app.engine('.hbs', hbs({
+  defaultLayout: 'main',
+  layoutsDir: path.join(app.get('views'), 'layouts'),
+  extname: '.hbs',
+}));
 
 // MIDDLEWARES
 app.use(expressLogger);
@@ -33,6 +40,7 @@ app.use(errorHandler);
 
 // Routes
 app.use(require('./routes/index'))
+app.use(require('./routes/authentication'))
 
 // DB Connection
 database.connect().then(

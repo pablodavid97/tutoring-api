@@ -60,8 +60,11 @@ router.get('/home', async (req, res) => {
 });
 
 router.get('/tutor', async (req, res) => {
-    rolId = 2
-    estudianteId = 63
+    rolId = req.query.rolId
+    estudianteId = req.query.estudianteId
+
+    console.log("Rol Id: ", rolId);
+    console.log("Estudiante Id: ", estudianteId);
 
     try {
         rol = await rolController.getRolById(rolId)
@@ -78,7 +81,7 @@ router.get('/tutor', async (req, res) => {
 });
 
 router.get('/students', async (req, res) => {
-    profesorId = 38
+    profesorId = req.query.profesorId
     try {
         estudiantes = await estudianteViewController.getEstudiantesByProfesorId(profesorId)
 
@@ -89,9 +92,12 @@ router.get('/students', async (req, res) => {
 });
 
 router.get('/student', async (req, res) => {
-    estudianteId = 62
+    estudianteId = req.query.userId
+    console.log("Estudiante Id: ", estudianteId);
     try {
         estudiante = await estudianteViewController.getEstudianteById(estudianteId)
+        console.log("Estudiante: ", estudiante);
+
         res.json({estudiante})
     } catch (error) {
         console.error(error.message);
@@ -101,17 +107,29 @@ router.get('/student', async (req, res) => {
 router.get('/reports', async(req, res) => {
     try {
         reuniones = await reunionViewController.getReunionesActivas()
+        console.log("Reuniones: ", reuniones);
+        
+        gpa = await estudianteController.getAverageGPA()
+        console.log("Average GPA: ", gpa);
 
-        res.json({reuniones})
+        activeUsers = await usuarioController.getActiveUsers()
+        console.log("Active Users: ", activeUsers);
+        
+        conditionedUsers = await estudianteController.getConditionedStudents()
+
+        res.json({reuniones, gpa, activeUsers, conditionedUsers})
     } catch (error) {
         console.error(error.message);
     }
 });
 
 router.get('/notifications', async(req, res) => {
-    rolId = 2
+    rolId = req.query.rolId
     try {
         rol = await rolController.getRolById(rolId)
+
+        console.log("rol: ", rol);
+
         res.json({rol})
     } catch (error) {
         console.error(error.message);

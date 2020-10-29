@@ -29,7 +29,19 @@ usuarioController.getAllUsers = async () => {
       logger.error(error.message);
     }
   } 
-  
+
+usuarioController.getActiveUsers = async () => {
+  try {
+    users = await usuario.findAll({
+      where: {firstTimeLogin: 0}
+    });
+
+    return users
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
+
 //  INNER JOIN USUARIOS
   usuarioController.getAllUsersRoles = async () => {
     try {
@@ -39,6 +51,7 @@ usuarioController.getAllUsers = async () => {
       logger.error(error.message);
     }
   }
+
 
 
 module.exports = usuarioController;
