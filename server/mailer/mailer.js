@@ -4,12 +4,11 @@ const hbs = require("nodemailer-express-handlebars");
 
 const options = {
     viewEngine: {
-        partialsDir: global.appRoot + '/views/partials',
         layoutsDir: global.appRoot + '/views/layouts',
         extname: ".hbs"
     },
     extName: ".hbs",
-    viewPath: 'src/views'
+    viewPath: 'server/views'
 };
 
 let transport = nodemailer.createTransport({
@@ -40,7 +39,7 @@ const sendEmail = async (mailObj) => {
     } catch (error) {
         console.error(error);
         throw new Error (
-            'Something went wrong in the sendmail method. Error ${error.message}'
+            `Something went wrong in the sendmail method. Error ${error.message}`
         );
     }
 }; 

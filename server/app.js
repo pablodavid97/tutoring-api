@@ -1,4 +1,5 @@
 const express = require('express');
+const hbs = require('express-handlebars')
 const bodyParser = require('body-parser');
 const { http, log } = require('winston');
 const HttpStatusCode = require('http-status-codes');
@@ -35,12 +36,14 @@ const errorHandler = (err, req, res, next) => {
   res.status(err.status || http.HttpStatusCode.INTERNAL_SERVER_ERROR);
   res.json(err);
 };
-
 app.use(errorHandler);
+
+global.appRoot = path.resolve(__dirname);
 
 // Routes
 app.use(require('./routes/index'))
 app.use(require('./routes/authentication'))
+app.use(require('./routes/mailer'))
 
 // DB Connection
 database.connect().then(
