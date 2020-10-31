@@ -4,7 +4,7 @@ const usuario = database.usuario
 const rol = database.rol
 const usuarioController = {}
 
-// DB QUERIES
+// DB SELECT QUERIES
 
 // FIND BY ID 
 usuarioController.getUserById = async (userId) => {
@@ -19,6 +19,20 @@ usuarioController.getUserById = async (userId) => {
     }
 }
 
+// FIND BY FIELD
+usuarioController.getUserByEmail = async (email) => {
+  try {
+    user = await usuario.findAll({
+      where: {
+        correoInstitucional: email
+    }});
+
+    return user[0]
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
+
 // SELECT *
 usuarioController.getAllUsers = async () => {
     try {
@@ -30,6 +44,7 @@ usuarioController.getAllUsers = async () => {
     }
   } 
 
+// SELECT WHERE FIRST TIME LOGIN = 0
 usuarioController.getActiveUsers = async () => {
   try {
     users = await usuario.findAll({
@@ -42,7 +57,7 @@ usuarioController.getActiveUsers = async () => {
   }
 }
 
-//  INNER JOIN USUARIOS
+//  INNER JOIN USUARIOS ROLES
   usuarioController.getAllUsersRoles = async () => {
     try {
       const userRoles = await usuario.findAll({include: [{model: rol}]});
@@ -51,6 +66,19 @@ usuarioController.getActiveUsers = async () => {
       logger.error(error.message);
     }
   }
+
+// DB UPDATE QUERIES
+usuarioController.setUserPasswordOnCreate = async (hash, userId) => {
+  try {
+    await usuario.update({hash: hash, firstTimeLogin: 0}, {
+      where: {
+        id: userId
+      }
+    });
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
 
 
 

@@ -1,5 +1,4 @@
 const nodemailer = require('nodemailer');
-require('dotenv').config();
 const hbs = require("nodemailer-express-handlebars");
 
 const options = {
@@ -23,6 +22,9 @@ let transport = nodemailer.createTransport({
 transport.use("compile", hbs(options));
 
 const sendEmail = async (mailObj) => {
+    console.log("Mail object: ", mailObj);
+
+    console.log("Options: ", options);
     const { from, to, subject, template, context} = mailObj;
     try {        
         let mailInfo = await transport.sendMail({ 
