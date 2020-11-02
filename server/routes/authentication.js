@@ -11,9 +11,10 @@ const estudianteViewController = require('../controllers/estudiante-view.control
 const reunionViewController = require('../controllers/reunion-view.controller')
 const profesorViewController = require('../controllers/profesor-view.controller');
 
-router.post('/reset-password', async (req, res) => {
+router.get('/user-by-email', async (req, res) => {
     try {
-        user = await usuarioController.getUserByEmail(req.body.email)
+        console.log("Request: ", req.query);
+        user = await usuarioController.getUserByEmail(req.query.email)
 
         console.log("User: ", user);
 
@@ -22,6 +23,16 @@ router.post('/reset-password', async (req, res) => {
         logger.error(error.message)
     }
 });
+
+router.get('/user-by-id', async (req, res) => {
+    try {
+        user = await usuarioController.getUserById(req.query.userId)
+
+        res.json(user)
+    } catch (error) {
+        logger.error(error.message)
+    }
+})
 
 router.post('/create-password', async (req, res) => {
     try {

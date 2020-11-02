@@ -17,7 +17,7 @@ module.exports = (sequelize) => {
         fecha: {
             type: DataTypes.DATE
         },
-        profesor_id: {
+        profesorId: {
             type: DataTypes.INTEGER
         },
         nombresProfesor: {

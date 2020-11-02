@@ -17,6 +17,20 @@ estudianteController.getEstudianteById = async (estudianteId) => {
     }
 }
 
+estudianteController.getAllStudentsByProfessor = async (profesorId) => {
+  try {
+    users = await estudiante.findAll({
+      where: {
+        profesorId: profesorId
+      }
+    });
+
+    return users;
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
+
 estudianteController.getAllStudents = async () => {
     try {
         const estudiantes = await estudiante.findAll()

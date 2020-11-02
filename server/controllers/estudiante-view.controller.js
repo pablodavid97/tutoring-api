@@ -24,6 +24,20 @@ estudianteViewController.getEstudianteById = async (usuarioId) => {
     }
 }
 
+estudianteViewController.getAllEstudiantesByProfessor = async (profesorId) => {
+    try {
+      users = await estudianteView.findAll({
+        where: {
+          profesorId: profesorId
+        }
+      });
+  
+      return users;
+    } catch (error) {
+      logger.error(error.message)
+    }
+  }
+
 estudianteViewController.getEstudiantesByProfesorId = async (profesorId) => {
     try {
         estudiantes = await estudianteView.findAll({

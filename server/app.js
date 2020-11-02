@@ -45,6 +45,7 @@ console.log("App root: ", global.appRoot);
 // Routes
 app.use(require('./routes/index'))
 app.use(require('./routes/authentication'))
+app.use('/meetings', require('./routes/meetings'))
 app.use(require('./routes/mailer'))
 
 // DB Connection

@@ -4,7 +4,6 @@ module.exports = (sequelize) => {
     const Reunion = sequelize.define('Reunion', {
         id: {
             type: DataTypes.INTEGER,
-            allowNull: false,
             primaryKey: true
         },
         tema: {
@@ -25,6 +24,18 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING
         },
         semestre: {
+            type: DataTypes.STRING
+        },
+        createdOn: {
+            type: DataTypes.DATE
+        },
+        createdBy: {
+            type: DataTypes.STRING
+        },
+        updatedOn: {
+            type: DataTypes.DATE
+        },
+        updatedBy: {
             type: DataTypes.STRING
         }
     }, {

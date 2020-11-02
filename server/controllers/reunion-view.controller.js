@@ -1,8 +1,43 @@
 const { logger } = require('../utils/logger');
 const {Sequelize} = require('sequelize')
-const database = require('../models/connection-manager')
+const database = require('../models/connection-manager');
 const reunionView = database.reunionView
 const reunionViewController = {}
+
+reunionViewController.getReunionesByProfessor = async (userId) => {
+    try {
+        reuniones = await reunionView.findAll({
+            where: {
+                profesorId: userId,
+                estadoId: {
+                    [Sequelize.Op.not]: 5
+                }
+            }
+        });
+
+        return reuniones
+    } catch (error) {
+        logger.error(error.message)
+    }
+}
+
+reunionViewController.getReunionesByStudent = async (userId) => {
+    try {
+        reuniones = await reunionView.findAll({
+            where: {
+                estudianteId: userId,
+                estadoId: {
+                    [Sequelize.Op.not]: 5
+                }
+            }
+        });
+
+        return reuniones;
+
+    } catch (error) {
+        logger.error(error.message)
+    }
+}
 
 reunionViewController.getReuniones = async () => {
     try {
@@ -28,6 +63,20 @@ reunionViewController.getReunionesActivas = async () => {
         return reuniones
     } catch (error) {
         logger.error(error.message);
+    }
+}
+
+reunionViewController.getLastMeetingId = async () => {
+    try {
+        reunionId = await reunionView.findOne({
+            order: [['id', 'DESC']]
+        });
+
+        // console.log("Reunion Id: ", reunionId);
+
+        return reunionId.id;
+    } catch (error) {
+        logger.error(error.message)
     }
 }
 
