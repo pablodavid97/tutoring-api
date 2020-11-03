@@ -1,21 +1,25 @@
-const {DataTypes} = require('sequelize')
+const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-    const Profesor = sequelize.define('Profesor', {
-        id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            primaryKey: true
-        },
-        carrera: {
-            type: DataTypes.STRING,
-            allowNull: false
-        }
-    }, {
-        underscored: true,
-        tableName: 'profesor',
-        timestamps: false,
-    });
+  const Profesor = sequelize.define(
+    'Profesor',
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        primaryKey: true
+      },
+      carrera: {
+        type: DataTypes.STRING,
+        allowNull: false
+      }
+    },
+    {
+      underscored: true,
+      tableName: 'profesor',
+      timestamps: false
+    }
+  );
 
-    return Profesor;
-}
+  return Profesor;
+};

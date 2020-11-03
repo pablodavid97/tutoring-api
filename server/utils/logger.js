@@ -21,7 +21,7 @@ const stream = {
   }
 };
 
-const expressLogger = morgan(expressFormat, {stream });
+const expressLogger = morgan(expressFormat, { stream });
 
 exports.expressLogger = expressLogger;
 exports.logger = logger;

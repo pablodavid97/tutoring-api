@@ -1,17 +1,16 @@
 const { logger } = require('../utils/logger');
-const database = require('../models/connection-manager')
-const profesorView = database.profesorView
-const profesorViewController = {}
+const database = require('../models/connection-manager');
+const profesorView = database.profesorView;
+const profesorViewController = {};
 
 profesorViewController.getProfesores = async () => {
-    try {
-        profesores = await profesorView.findAll()
+  try {
+    profesores = await profesorView.findAll();
 
-        return profesores;
+    return profesores;
+  } catch (error) {
+    logger.error(error.message);
+  }
+};
 
-    } catch (error) {
-        logger.error(error.message);
-    }
-}
-
-module.exports = profesorViewController
+module.exports = profesorViewController;
