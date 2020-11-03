@@ -47,7 +47,8 @@ reunionController.createMeeting = async (
         ]
       }
     );
-    return meeting;
+    console.log("Meetings: ", meeting.dataValues);
+    return meeting.dataValues;
   } catch (error) {
     logger.error(error.message);
   }

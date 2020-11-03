@@ -10,6 +10,7 @@ const reunionController = require('../controllers/reunion.controller');
 const estudianteViewController = require('../controllers/estudiante-view.controller');
 const reunionViewController = require('../controllers/reunion-view.controller');
 const profesorViewController = require('../controllers/profesor-view.controller');
+const notificacionViewController = require('../controllers/notificacion-view.controller');
 
 router.get('/home', async (req, res) => {
   console.log('Got in!');
@@ -125,13 +126,19 @@ router.get('/reports', async (req, res) => {
 });
 
 router.get('/notifications', async (req, res) => {
-  rolId = req.query.rolId;
   try {
+    rolId = req.query.rolId;
+    userId = req.query.userId;
+
     rol = await rolController.getRolById(rolId);
 
     console.log('rol: ', rol);
 
-    res.json({ rol });
+    notifications = await notificacionViewController.getNotificationsByUserId(userId)
+
+    console.log("Notifications: ", notifications);
+
+    res.json({ rol, notifications });
   } catch (error) {
     console.error(error.message);
   }

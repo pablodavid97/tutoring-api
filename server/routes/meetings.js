@@ -6,6 +6,7 @@ const estudianteViewController = require('../controllers/estudiante-view.control
 const reunionViewController = require('../controllers/reunion-view.controller');
 const { logger } = require('../utils/logger');
 const reunionController = require('../controllers/reunion.controller');
+const notificacionController = require('../controllers/notificacion.controller');
 
 router.get('/', async (req, res) => {
   console.log('Req: ', req.query);
@@ -64,7 +65,17 @@ router.post('/create', async (req, res) => {
       req.body.studentId,
       req.body.email
     );
-    res.json(meeting);
+
+    meetingId = await reunionViewController.getLastMeetingId()
+
+    console.log("Meeting: ", meetingId);
+
+    notification = await notificacionController.createNotificacion(
+      meetingId,
+      req.body.studentId
+    )
+
+    res.json({meeting, notification});
   } catch (error) {
     logger.error(error.message);
   }
