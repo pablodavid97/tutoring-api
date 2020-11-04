@@ -8,7 +8,7 @@ notificacionViewController.getNotificationsByUserId = async (userId) => {
     try {
         notifications = notificacionView.findAll({
             where: {
-                estudianteId: userId
+                usuarioId: userId
             }
         });
 

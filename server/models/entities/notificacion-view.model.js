@@ -8,7 +8,7 @@ module.exports = (sequelize) => {
         type: DataTypes.INTEGER,
         primaryKey: true
       },
-      estudianteId: {
+      usuarioId: {
           type: DataTypes.INTEGER
       },
       codigo: {
@@ -16,6 +16,9 @@ module.exports = (sequelize) => {
       },
       correoInstitucional: {
           type: DataTypes.STRING
+      },
+      estudianteId: {
+          type: DataTypes.INTEGER
       },
       nombresEstudiante: {
           type: DataTypes.STRING
@@ -53,7 +56,7 @@ module.exports = (sequelize) => {
     },
     {
       underscored: true,
-      tableName: 'notification_view',
+      tableName: 'notificacion_view',
       timestamps: false
     }
   );
