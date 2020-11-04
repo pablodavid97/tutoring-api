@@ -87,6 +87,11 @@ router.post('/delete', async (req, res) => {
   try {
     await reunionController.deleteMeeting(req.body.meetingId, req.body.email);
 
+    notification = await notificacionController.createNotificacion(
+      req.body.meetingId,
+      req.body.studentId,
+    )
+
     res.json({ status: 'ok' });
   } catch (error) {
     logger.error(error.message);
@@ -115,10 +120,69 @@ router.post('/edit', async (req, res) => {
       req.body.email,
       req.body.meetingId
     );
+
+    notification = await notificacionController.createNotificacion(
+      req.body.meetingId,
+      req.body.studentId,
+    )
+
     res.json({ status: 'ok' });
   } catch (error) {
-    logger.error(error);
+    logger.error(error.message);
   }
 });
+
+router.post('/accept', async (req, res) => {
+  try {
+    meetingId = req.body.meetingId 
+    comment = req.body.comment
+    notificationId = req.body.notificationId
+    profesorId = req.body.profesorId
+    email = req.body.email
+
+    await reunionController.editMeetingStatus(meetingId, 3, email) 
+
+    if(comment) {
+      await reunionController.editMeetingStudentComment(meetingId, comment, email)
+    }
+
+    await notificacionController.deleteNotificacion(notificationId)
+
+    notification = await notificacionController.createNotificacion(
+      meetingId,
+      profesorId
+    )
+
+    res.json({ status: 'ok' });
+
+  } catch (error) {
+    logger.error(error.message)
+  }
+})
+
+router.post('/reject', async (req, res) => {
+  try {
+    meetingId = req.body.meetingId 
+    comment = req.body.comment
+    notificationId = req.body.notificationId
+    profesorId = req.body.profesorId
+    email = req.body.email
+
+    console.log("Comment: ", comment);
+
+    await reunionController.editMeetingStatus(meetingId, 4, email) 
+    await reunionController.editMeetingStudentComment(meetingId, comment, email)
+    await notificacionController.deleteNotificacion(notificationId)
+
+    notification = await notificacionController.createNotificacion(
+      meetingId,
+      profesorId
+    )
+
+    res.json({ status: 'ok' });
+  } catch (error) {
+    logger.error(error.message)
+  }
+})
 
 module.exports = router;

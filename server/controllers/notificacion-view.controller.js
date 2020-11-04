@@ -9,7 +9,8 @@ notificacionViewController.getNotificationsByUserId = async (userId) => {
         notifications = notificacionView.findAll({
             where: {
                 usuarioId: userId
-            }
+            },
+            order: [['id', 'DESC']]
         });
 
         return notifications

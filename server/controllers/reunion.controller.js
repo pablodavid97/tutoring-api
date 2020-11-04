@@ -100,4 +100,28 @@ reunionController.editMeeting = async (
   }
 };
 
+reunionController.editMeetingStatus = async (meetingId, statusId, email) => {
+  try {
+    await reunion.update({estadoId: statusId, updatedBy: email, updatedOn: new Date()}, {
+      where: {
+        id: meetingId
+      }
+    })
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
+
+reunionController.editMeetingStudentComment = async (meetingId, comment, email) => {
+  try {
+    await reunion.update({comentariosEstudiante: comment, updatedBy: email, updatedOn: new Date()}, {
+      where: {
+        id: meetingId
+      }
+    })
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
+
 module.exports = reunionController;

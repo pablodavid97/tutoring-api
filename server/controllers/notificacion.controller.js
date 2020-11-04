@@ -25,4 +25,16 @@ notificacionController.createNotificacion = async (reunionId, usuarioId) => {
     }
 }
 
+notificacionController.deleteNotificacion = async (notificationId) => {
+  try {
+    await notificacion.destroy({
+      where: {
+        id: notificationId
+      }
+    })
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
+
 module.exports = notificacionController;

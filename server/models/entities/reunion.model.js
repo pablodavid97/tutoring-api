@@ -19,10 +19,10 @@ module.exports = (sequelize) => {
         type: DataTypes.DATE,
         allowNull: false
       },
-      comentarios_estudiante: {
+      comentariosEstudiante: {
         type: DataTypes.STRING
       },
-      comentarios_profesor: {
+      comentariosProfesor: {
         type: DataTypes.STRING
       },
       semestre: {
