@@ -49,4 +49,19 @@ router.post('/create-password', async (req, res) => {
   }
 });
 
+router.post('/change-password', async (req, res) => {
+  try{
+    await usuarioController.setUserPassword(
+      req.body.hash,
+      req.body.userId
+    );
+
+    usuario = await usuarioController.getUserById(req.body.userId);
+
+    res.json(usuario);
+  } catch(error) {
+    logger.error(error.message)
+  }
+})
+
 module.exports = router;

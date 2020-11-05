@@ -84,4 +84,19 @@ usuarioController.setUserPasswordOnCreate = async (hash, userId) => {
   }
 };
 
+usuarioController.setUserPassword = async (hash, userId) => {
+  try {
+    await usuario.update(
+      {hash: hash},
+      {
+        where: {
+          id: userId
+        }
+      }
+    );
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
+
 module.exports = usuarioController;
