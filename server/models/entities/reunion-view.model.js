@@ -28,6 +28,9 @@ module.exports = (sequelize) => {
       apellidosProfesor: {
         type: DataTypes.STRING
       },
+      comentariosProfesor: {
+        type: DataTypes.STRING
+      },
       estudianteId: {
         type: DataTypes.INTEGER
       },
@@ -35,6 +38,9 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING
       },
       apellidosEstudiante: {
+        type: DataTypes.STRING
+      },
+      comentariosEstudiante: {
         type: DataTypes.STRING
       },
       estadoId: {
