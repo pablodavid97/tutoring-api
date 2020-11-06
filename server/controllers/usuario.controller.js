@@ -99,4 +99,37 @@ usuarioController.setUserPassword = async (hash, userId) => {
   }
 }
 
+// Updates user profile with optional parameters
+usuarioController.setUserProfile = async (firstNames, lastNames, email, phone, userId) => {
+  try {
+    console.log("Edit profile: ", firstNames, lastNames, email, phone);
+
+    if(firstNames){
+      await usuario.update({nombres: firstNames}, {where: {
+        id: userId
+      }})
+    }
+
+    if(lastNames){
+      await usuario.update({apellidos: lastNames}, {where: {
+        id: userId
+      }})
+    }
+
+    if(email){
+      await usuario.update({correoPersonal: email}, {where: {
+        id: userId
+      }})
+    }
+
+    if(phone){
+      await usuario.update({telefono: phone}, {where: {
+        id: userId
+      }})
+    }
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
+
 module.exports = usuarioController;
