@@ -11,6 +11,7 @@ const estudianteViewController = require('../controllers/estudiante-view.control
 const reunionViewController = require('../controllers/reunion-view.controller');
 const profesorViewController = require('../controllers/profesor-view.controller');
 const notificacionViewController = require('../controllers/notificacion-view.controller');
+const { logger } = require('../utils/logger');
 
 router.get('/home', async (req, res) => {
   console.log('Got in!');
@@ -195,5 +196,37 @@ router.get('/usuarios', async (req, res) => {
   let users = await usuarioController.getAllUsers();
   res.json(users);
 });
+
+router.post('/edit-profile', async (req, res) => {
+  try {
+    console.log("Entro!");
+    lastNames = req.body.lastNames
+    firstNames = req.body.firstNames
+    email = req.body.email
+    phone = req.body.phone
+    userId = req.body.userId
+
+    await usuarioController.setUserProfile(firstNames, lastNames, email, phone, userId)
+
+    res.json({ status: 'ok' });
+  } catch (error) {
+    logger.error(error.message)
+  }
+})
+
+router.post('/change-password', async (req, res) => {
+  try{
+    await usuarioController.setUserPassword(
+      req.body.hash,
+      req.body.userId
+    );
+
+    usuario = await usuarioController.getUserById(req.body.userId);
+
+    res.json(usuario);
+  } catch(error) {
+    logger.error(error.message)
+  }
+})
 
 module.exports = router;
