@@ -17,7 +17,6 @@ notificacionController.createNotificacion = async (reunionId, usuarioId) => {
                 ]
               }
         );
-        console.log("User notification: ", userNotification);
 
         return userNotification
     } catch (error) {
@@ -32,6 +31,20 @@ notificacionController.deleteNotificacion = async (notificationId) => {
         id: notificationId
       }
     })
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
+
+notificacionController.getNotificationByMeetingId = async (meetingId) => {
+  try {
+    notification = await notificacion.findAll({
+      where: {
+        reunionId: meetingId
+      }
+    });
+
+    return notification[0]
   } catch (error) {
     logger.error(error.message)
   }

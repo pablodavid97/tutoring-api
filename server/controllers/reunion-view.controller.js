@@ -68,8 +68,6 @@ reunionViewController.getReunionById = async (reunionId) => {
   try {
     reunion = await reunionView.findByPk(reunionId);
 
-    console.log('meeting: ', reunion);
-
     return reunion;
   } catch (error) {
     logger.error(error.message);
@@ -81,8 +79,6 @@ reunionViewController.getLastMeetingId = async () => {
     reunionId = await reunionView.findOne({
       order: [['id', 'DESC']]
     });
-
-    // console.log("Reunion Id: ", reunionId);
 
     return reunionId.id;
   } catch (error) {

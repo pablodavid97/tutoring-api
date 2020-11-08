@@ -4,8 +4,6 @@ const router = express.Router();
 
 router.post('/sendmail', async (req, res) => {
   try {
-    console.log('Request body: ', req.body);
-
     const context = {
       user: req.body
     };
