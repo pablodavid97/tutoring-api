@@ -170,8 +170,6 @@ router.post('/reject', async (req, res) => {
 
 router.post('/done', async (req, res) => {
   try {
-    console.log("Datos Ingresados: ", req.body);
-
     meetingId = req.body.meetingId
     meetingOption = req.body.meetingOption
     isStudent = req.body.isStudent
@@ -185,22 +183,25 @@ router.post('/done', async (req, res) => {
       user = await usuarioController.getUserById(reunion.estudianteId)
 
       await reunionController.editMeetingStudentComment(meetingId, comment, user.correoInstitucional)
-
-      await notificacionController.deleteNotificacion(notificationId)
     }
 
     if(isProfessor) {
       user = await usuarioController.getUserById(reunion.profesorId)
+      student = await usuarioController.getUserById(reunion.estudianteId)
 
       await reunionController.editMeetingProfessorComment(meetingId, comment, user.correoInstitucional)
 
-      if(meetingOption === 0) {
+      if(meetingOption === "0") {
         await reunionController.editMeetingStatus(meetingId, 8, user.correoInstitucional)
       } else {
         await reunionController.editMeetingStatus(meetingId, 7, user.correoInstitucional)
       }
 
-      await notificacionController.deleteNotificacion(notificationId)
+      await notificacionController.deleteAllNotificationsByMeetingId(meetingId)
+
+      // Creates notifications for student and professor when meeting is done
+      await notificacionController.createNotificacion(meetingId, user.id)
+      await notificacionController.createNotificacion(meetingId, student.id)
     }
 
     res.json({ status: 'ok' });
@@ -208,6 +209,26 @@ router.post('/done', async (req, res) => {
 
   } catch (error) {
     logger.error(error.message)
+  }
+});
+
+router.post('/reschedule', async (req, res) => {
+  try {
+    await reunionController.rescheduleMeeting(
+      req.body.subject,
+      req.body.description,
+      req.body.date,
+      req.body.email,
+      req.body.meetingId
+    );
+
+    await notificacionController.deleteAllNotificationsByMeetingId(req.body.meetingId)
+
+    await notificacionController.createNotificacion(req.body.meetingId, req.body.studentId)
+
+    res.json({ status: 'ok' });
+  } catch (error) {
+    logger.error(error.message);
   }
 });
 

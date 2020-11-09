@@ -36,6 +36,18 @@ notificacionController.deleteNotificacion = async (notificationId) => {
   }
 }
 
+notificacionController.deleteAllNotificationsByMeetingId = async (meetingId) => {
+  try {
+    await notificacion.destroy({
+      where: {
+        reunionId: meetingId 
+      }
+    })
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
+
 notificacionController.getNotificationByMeetingId = async (meetingId) => {
   try {
     notification = await notificacion.findAll({

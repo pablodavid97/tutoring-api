@@ -101,6 +101,34 @@ reunionController.editMeeting = async (
   }
 };
 
+reunionController.rescheduleMeeting = async (
+  subject,
+  description,
+  date,
+  email,
+  meetingId
+) => {
+  try {
+    await reunion.update(
+      {
+        tema: subject,
+        descripcion: description,
+        fecha: date,
+        estadoId: 1,
+        updatedOn: new Date(),
+        updatedBy: email
+      },
+      {
+        where: {
+          id: meetingId
+        }
+      }
+    );
+  } catch (error) {
+    logger.error(error.message);
+  }
+};
+
 reunionController.editMeetingStatus = async (meetingId, statusId, email) => {
   try {
     await reunion.update({estadoId: statusId, updatedBy: email, updatedOn: new Date()}, {
