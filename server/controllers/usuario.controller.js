@@ -85,7 +85,7 @@ usuarioController.setUserPasswordOnCreate = async (hash, userId) => {
 usuarioController.setUserPassword = async (hash, userId) => {
   try {
     await usuario.update(
-      {hash: hash},
+      { hash: hash },
       {
         where: {
           id: userId
@@ -93,39 +93,65 @@ usuarioController.setUserPassword = async (hash, userId) => {
       }
     );
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
+};
 
 // Updates user profile with optional parameters
-usuarioController.setUserProfile = async (firstNames, lastNames, email, phone, userId) => {
+usuarioController.setUserProfile = async (
+  firstNames,
+  lastNames,
+  email,
+  phone,
+  userId
+) => {
   try {
-    if(firstNames){
-      await usuario.update({nombres: firstNames}, {where: {
-        id: userId
-      }})
+    if (firstNames) {
+      await usuario.update(
+        { nombres: firstNames },
+        {
+          where: {
+            id: userId
+          }
+        }
+      );
     }
 
-    if(lastNames){
-      await usuario.update({apellidos: lastNames}, {where: {
-        id: userId
-      }})
+    if (lastNames) {
+      await usuario.update(
+        { apellidos: lastNames },
+        {
+          where: {
+            id: userId
+          }
+        }
+      );
     }
 
-    if(email){
-      await usuario.update({correoPersonal: email}, {where: {
-        id: userId
-      }})
+    if (email) {
+      await usuario.update(
+        { correoPersonal: email },
+        {
+          where: {
+            id: userId
+          }
+        }
+      );
     }
 
-    if(phone){
-      await usuario.update({telefono: phone}, {where: {
-        id: userId
-      }})
+    if (phone) {
+      await usuario.update(
+        { telefono: phone },
+        {
+          where: {
+            id: userId
+          }
+        }
+      );
     }
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
+};
 
 module.exports = usuarioController;

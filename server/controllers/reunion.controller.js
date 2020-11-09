@@ -1,7 +1,7 @@
 const { log } = require('winston');
 const database = require('../models/connection-manager');
 const { logger } = require('../utils/logger');
-const {Sequelize} = require('sequelize')
+const { Sequelize } = require('sequelize');
 const reunion = database.reunion;
 const reunionController = {};
 const notificationController = require('./notificacion.controller');
@@ -131,86 +131,122 @@ reunionController.rescheduleMeeting = async (
 
 reunionController.editMeetingStatus = async (meetingId, statusId, email) => {
   try {
-    await reunion.update({estadoId: statusId, updatedBy: email, updatedOn: new Date()}, {
-      where: {
-        id: meetingId
+    await reunion.update(
+      { estadoId: statusId, updatedBy: email, updatedOn: new Date() },
+      {
+        where: {
+          id: meetingId
+        }
       }
-    })
+    );
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
+};
 
-reunionController.editMeetingStudentComment = async (meetingId, comment, email) => {
+reunionController.editMeetingStudentComment = async (
+  meetingId,
+  comment,
+  email
+) => {
   try {
-    await reunion.update({comentariosEstudiante: comment, updatedBy: email, updatedOn: new Date()}, {
-      where: {
-        id: meetingId
+    await reunion.update(
+      {
+        comentariosEstudiante: comment,
+        updatedBy: email,
+        updatedOn: new Date()
+      },
+      {
+        where: {
+          id: meetingId
+        }
       }
-    })
+    );
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
+};
 
-reunionController.editMeetingProfessorComment = async (meetingId, comment, email) => {
+reunionController.editMeetingProfessorComment = async (
+  meetingId,
+  comment,
+  email
+) => {
   try {
-    await reunion.update({comentariosProfesor: comment, updatedBy: email, updatedOn: new Date()}, {
-      where: {
-        id: meetingId
+    await reunion.update(
+      { comentariosProfesor: comment, updatedBy: email, updatedOn: new Date() },
+      {
+        where: {
+          id: meetingId
+        }
       }
-    })
+    );
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
+};
 
 reunionController.getReuniones = async () => {
   try {
-    reuniones = await reunion.findAll()
+    reuniones = await reunion.findAll();
 
-    return reuniones
+    return reuniones;
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-
-}
+};
 
 reunionController.setDailyMeetings = async () => {
   try {
-    meetings = await reunionController.getReuniones()
-    meetingsNum = meetings.length
+    meetings = await reunionController.getReuniones();
+    meetingsNum = meetings.length;
 
-    dateTime = new Date()
-    currentDate = getDate(dateTime)
+    dateTime = new Date();
+    currentDate = getDate(dateTime);
 
     for (var i = 0; i < meetingsNum; i++) {
+      if (
+        getDate(meetings[i].fecha) === currentDate &&
+        meetings[i].estadoId === 3
+      ) {
+        if (meetings[i].estadoId !== 6) {
+          await reunionController.editMeetingStatus(
+            meetings[i].id,
+            6,
+            'system'
+          );
 
-      if(getDate(meetings[i].fecha) === currentDate && meetings[i].estadoId === 3) {
+          notification = await notificacionController.getNotificationByMeetingId(
+            meetings[i].id
+          );
 
-        if(meetings[i].estadoId !== 6) {
-          await reunionController.editMeetingStatus(meetings[i].id, 6, "system")
-          
-          notification = await notificacionController.getNotificationByMeetingId(meetings[i].id)
-
-          notificationController.deleteNotificacion(notification.id)
+          notificationController.deleteNotificacion(notification.id);
 
           // creates notifications for professor and student
-          notificationController.createNotificacion(meetings[i].id, meetings[i].estudianteId)
-          notificationController.createNotificacion(meetings[i].id, meetings[i].profesorId)
+          notificationController.createNotificacion(
+            meetings[i].id,
+            meetings[i].estudianteId
+          );
+          notificationController.createNotificacion(
+            meetings[i].id,
+            meetings[i].profesorId
+          );
         }
       }
     }
-
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
+};
 
 function getDate(datetime) {
-  date = datetime.getFullYear()+'/'+(datetime.getMonth()+1)+'/'+datetime.getDate(); 
-  return date
+  date =
+    datetime.getFullYear() +
+    '/' +
+    (datetime.getMonth() + 1) +
+    '/' +
+    datetime.getDate();
+  return date;
 }
-
 
 module.exports = reunionController;

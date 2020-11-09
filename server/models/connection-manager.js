@@ -47,7 +47,7 @@ database.notificacion = require('./entities/notificacion.model')(
 );
 database.notificacionView = require('./entities/notificacion-view.model')(
   database.sequelize
-)
+);
 
 // establece las relaciones entre las entidades
 
@@ -81,11 +81,11 @@ database.estudiante.hasMany(database.reunion, { as: 'reunion' });
 database.reunion.belongsTo(database.estudiante, { as: 'estudiante' });
 
 // relacion muchos a muchos reunion-usuaro (notificacion)
-database.usuario.hasMany(database.notificacion, { as: 'notificacion'});
-database.notificacion.belongsTo(database.usuario, {as: 'usuario'} );
+database.usuario.hasMany(database.notificacion, { as: 'notificacion' });
+database.notificacion.belongsTo(database.usuario, { as: 'usuario' });
 
-database.reunion.hasMany(database.notificacion, { as: 'notificacion'});
-database.notificacion.belongsTo(database.reunion, {as: 'reunion'});
+database.reunion.hasMany(database.notificacion, { as: 'notificacion' });
+database.notificacion.belongsTo(database.reunion, { as: 'reunion' });
 
 // CONNECTION
 database.connect = async () => {

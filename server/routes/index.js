@@ -13,7 +13,6 @@ const profesorViewController = require('../controllers/profesor-view.controller'
 const notificacionViewController = require('../controllers/notificacion-view.controller');
 const { logger } = require('../utils/logger');
 
-
 router.get('/home', async (req, res) => {
   usuarioId = req.query.userId;
   rolId = req.query.rolId;
@@ -102,7 +101,9 @@ router.get('/notifications', async (req, res) => {
 
     rol = await rolController.getRolById(rolId);
 
-    notifications = await notificacionViewController.getNotificationsByUserId(userId)
+    notifications = await notificacionViewController.getNotificationsByUserId(
+      userId
+    );
 
     res.json({ rol, notifications });
   } catch (error) {
@@ -160,33 +161,36 @@ router.get('/usuarios', async (req, res) => {
 
 router.post('/edit-profile', async (req, res) => {
   try {
-    lastNames = req.body.lastNames
-    firstNames = req.body.firstNames
-    email = req.body.email
-    phone = req.body.phone
-    userId = req.body.userId
+    lastNames = req.body.lastNames;
+    firstNames = req.body.firstNames;
+    email = req.body.email;
+    phone = req.body.phone;
+    userId = req.body.userId;
 
-    await usuarioController.setUserProfile(firstNames, lastNames, email, phone, userId)
+    await usuarioController.setUserProfile(
+      firstNames,
+      lastNames,
+      email,
+      phone,
+      userId
+    );
 
     res.json({ status: 'ok' });
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-})
+});
 
 router.post('/change-password', async (req, res) => {
-  try{
-    await usuarioController.setUserPassword(
-      req.body.hash,
-      req.body.userId
-    );
+  try {
+    await usuarioController.setUserPassword(req.body.hash, req.body.userId);
 
     usuario = await usuarioController.getUserById(req.body.userId);
 
     res.json(usuario);
-  } catch(error) {
-    logger.error(error.message)
+  } catch (error) {
+    logger.error(error.message);
   }
-})
+});
 
 module.exports = router;

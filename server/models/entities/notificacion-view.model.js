@@ -9,55 +9,55 @@ module.exports = (sequelize) => {
         primaryKey: true
       },
       usuarioId: {
-          type: DataTypes.INTEGER
+        type: DataTypes.INTEGER
       },
       codigo: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       },
       correoInstitucional: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       },
       estudianteId: {
-          type: DataTypes.INTEGER
+        type: DataTypes.INTEGER
       },
       nombresEstudiante: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       },
       apellidosEstudiante: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       },
       comentariosEstudiante: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       },
       profesorId: {
-          type: DataTypes.INTEGER
+        type: DataTypes.INTEGER
       },
       nombresProfesor: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       },
       apellidosProfesor: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       },
       comentariosProfesor: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       },
       reunionId: {
-          type: DataTypes.INTEGER
+        type: DataTypes.INTEGER
       },
       tema: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       },
       descripcion: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       },
       fecha: {
-          type: DataTypes.DATE
+        type: DataTypes.DATE
       },
       estadoId: {
-          type: DataTypes.INTEGER
+        type: DataTypes.INTEGER
       },
       estado: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       }
     },
     {
