@@ -6,10 +6,7 @@ const {Sequelize} = require('sequelize')
 
 estudianteController.getEstudianteById = async (estudianteId) => {
     try {
-        console.log("UserId: ", estudianteId);
         const row = await estudiante.findByPk(estudianteId)
-
-        console.log("Estudiante: ", row);
 
         return row;
     } catch (error) {
@@ -21,8 +18,6 @@ estudianteController.getAllStudents = async () => {
     try {
         const estudiantes = await estudiante.findAll()
 
-        console.log("Estudiantes: ", estudiantes.length);
-
         return estudiantes
     } catch (error) {
         logger.error(error.message)
@@ -30,12 +25,9 @@ estudianteController.getAllStudents = async () => {
 }
 
 estudianteController.getAverageGPA = async () => {
-    console.log("Entro!");
     try {
       userNum = await estudianteController.getAllStudents()
       
-      console.log("All Students: ", userNum.length);
-  
       globalGPA = await estudiante.sum('gpa');
 
       averageGPA = globalGPA / userNum.length

@@ -7,7 +7,6 @@ const rolController = {};
 rolController.getRolById = async (rolId) => {
   try {
     const rows = await rol.findByPk(rolId);
-    console.log('Rol: ', rows);
     return rows;
   } catch (error) {
     logger.error(error.message);

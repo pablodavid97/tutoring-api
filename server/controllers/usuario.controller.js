@@ -11,8 +11,6 @@ usuarioController.getUserById = async (userId) => {
   try {
     const rows = await usuario.findByPk(userId);
 
-    console.log('Usuario: ', rows);
-
     return rows;
   } catch (error) {
     logger.error(error.message);
@@ -102,8 +100,6 @@ usuarioController.setUserPassword = async (hash, userId) => {
 // Updates user profile with optional parameters
 usuarioController.setUserProfile = async (firstNames, lastNames, email, phone, userId) => {
   try {
-    console.log("Edit profile: ", firstNames, lastNames, email, phone);
-
     if(firstNames){
       await usuario.update({nombres: firstNames}, {where: {
         id: userId

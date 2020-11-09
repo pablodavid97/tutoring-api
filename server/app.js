@@ -43,8 +43,6 @@ app.use(errorHandler);
 
 global.appRoot = path.resolve(__dirname);
 
-console.log('App root: ', global.appRoot);
-
 // Routes
 app.use(require('./routes/index'));
 app.use(require('./routes/authentication'));
