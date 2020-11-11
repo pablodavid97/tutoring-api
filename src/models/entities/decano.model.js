@@ -6,12 +6,13 @@ module.exports = (sequelize) => {
     {
       id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         primaryKey: true
       },
       carrera: {
         type: DataTypes.STRING,
-        allowNull: false
+      },
+      usuarioId: {
+        type: DataTypes.INTEGER,
       }
     },
     {

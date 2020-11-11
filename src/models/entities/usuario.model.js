@@ -36,9 +36,6 @@ module.exports = (sequelize) => {
       firstTimeLogin: {
         type: DataTypes.TINYINT,
         allowNull: false
-      },
-      fotoPerfil: {
-        type: DataTypes.BLOB('long')
       }
     },
     {

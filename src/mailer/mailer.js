@@ -7,7 +7,7 @@ const options = {
     extname: '.hbs'
   },
   extName: '.hbs',
-  viewPath: 'server/views'
+  viewPath: 'src/views'
 };
 
 let transport = nodemailer.createTransport({

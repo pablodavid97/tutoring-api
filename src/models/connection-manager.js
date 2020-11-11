@@ -66,6 +66,9 @@ database.profesor.belongsTo(database.usuario, { as: 'usuario' });
 database.usuario.hasMany(database.estudiante, { as: 'estudiante' });
 database.estudiante.belongsTo(database.usuario, { as: 'usuario' });
 
+database.imagen.hasMany(database.usuario, { as: 'usuario'});
+database.usuario.belongsTo(database.imagen, { as: 'imagen'});
+
 // relacion profesor-estudiante
 database.profesor.hasMany(database.estudiante, { as: 'estudiante' });
 database.estudiante.belongsTo(database.profesor, { as: 'profesor' });
