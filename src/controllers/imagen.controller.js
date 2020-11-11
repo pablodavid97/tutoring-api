@@ -11,10 +11,19 @@ imagenController.uploadFile = async (file) => {
             return
         }
 
+        fs.writeFileSync(
+            global.appRoot + "/resources/static/assets/tmp/" + file.nombre,
+            new Buffer.from(file.datos, "binary")
+        );
+
+        imageData = fs.readFileSync(global.appRoot + "/resources/static/assets/tmp/" + file.nombre)
+        
+        console.log("File has been uploaded");
+
         image = await imagen.create({
             formato: file.formato,
             nombre: file.nombre,
-            datos: file.datos,
+            datos: imageData,
             createdOn: file.createdOn
         },
         {
@@ -25,14 +34,7 @@ imagenController.uploadFile = async (file) => {
               'createdOn'
             ]
           }
-        ).then(() => {
-            fs.writeFileSync(
-                global.appRoot + "/resources/static/assets/tmp/" + file.nombre,
-                new Buffer.from(file.datos, "binary")
-              );
-            
-            console.log("File has been uploaded");
-        });
+        )
 
         return image
 

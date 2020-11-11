@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-  const EstudianteView = sequelize.define(
-    'EstudianteView',
+  const UsuarioView = sequelize.define(
+    'UsuarioView',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -13,43 +13,38 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING
       },
       correoInstitucional: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false
       },
       hash: {
         type: DataTypes.STRING
       },
       nombres: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false
       },
       apellidos: {
         type: DataTypes.STRING
       },
       correoPersonal: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false
       },
       telefono: {
         type: DataTypes.STRING
       },
-      carrera: {
-        type: DataTypes.STRING
+      firstTimeLogin: {
+        type: DataTypes.TINYINT,
+        allowNull: false
       },
-      gpa: {
-        type: DataTypes.FLOAT
+      rolId: {
+          type: DataTypes.INTEGER
       },
-      status: {
-        type: DataTypes.STRING
-      },
-      periodoDeAdmision: {
-        type: DataTypes.STRING
-      },
-      tipoDeAdmision: {
-        type: DataTypes.STRING
-      },
-      profesorId: {
-        type: DataTypes.INTEGER
+      rol: {
+          type: DataTypes.STRING
       },
       imagenId: {
-        type: DataTypes.INTEGER
+          type: DataTypes.INTEGER
       },
       formatoImagen: {
           type: DataTypes.STRING
@@ -63,10 +58,10 @@ module.exports = (sequelize) => {
     },
     {
       underscored: true,
-      tableName: 'estudiante_view',
+      tableName: 'usuario_view',
       timestamps: false
     }
   );
 
-  return EstudianteView;
+  return UsuarioView;
 };

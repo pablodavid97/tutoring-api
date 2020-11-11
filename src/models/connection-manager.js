@@ -32,7 +32,13 @@ database.profesor = require('./entities/profesor.model')(database.sequelize);
 database.estudiante = require('./entities/estudiante.model')(
   database.sequelize
 );
-database.reunion = require('./entities/reunion.model')(database.sequelize);
+database.reunion = require('./entities/reunion.model')(
+  database.sequelize
+);
+
+database.usuarioView = require('./entities/usuario-view.model')(
+  database.sequelize
+);
 database.estudianteView = require('./entities/estudiante-view.model')(
   database.sequelize
 );

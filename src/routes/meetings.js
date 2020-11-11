@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const usuarioController = require('../controllers/usuario.controller');
+const usuarioViewController = require('../controllers/usuario-view.controller');
 const estudianteController = require('../controllers/estudiante.controller');
 const estudianteViewController = require('../controllers/estudiante-view.controller');
 const reunionViewController = require('../controllers/reunion-view.controller');
@@ -23,7 +24,7 @@ router.get('/', async (req, res) => {
         req.query.userId
       );
 
-      tutor = await usuarioController.getUserById(studentInfo.profesorId);
+      tutor = await usuarioViewController.getUserById(studentInfo.profesorId);
 
       meetings = await reunionViewController.getReunionesByStudent(
         req.query.userId
@@ -186,7 +187,7 @@ router.post('/done', async (req, res) => {
     reunion = await reunionViewController.getReunionById(meetingId);
 
     if (isStudent) {
-      user = await usuarioController.getUserById(reunion.estudianteId);
+      user = await usuarioViewController.getUserById(reunion.estudianteId);
 
       await reunionController.editMeetingStudentComment(
         meetingId,
@@ -196,8 +197,8 @@ router.post('/done', async (req, res) => {
     }
 
     if (isProfessor) {
-      user = await usuarioController.getUserById(reunion.profesorId);
-      student = await usuarioController.getUserById(reunion.estudianteId);
+      user = await usuarioViewController.getUserById(reunion.profesorId);
+      student = await usuarioViewController.getUserById(reunion.estudianteId);
 
       await reunionController.editMeetingProfessorComment(
         meetingId,

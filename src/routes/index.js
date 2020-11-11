@@ -2,6 +2,7 @@ const { log } = require('winston');
 const express = require('express');
 const router = express.Router();
 const usuarioController = require('../controllers/usuario.controller');
+const usuarioViewController = require('../controllers/usuario-view.controller');
 const rolController = require('../controllers/rol.controller');
 const estudianteController = require('../controllers/estudiante.controller');
 const decanoController = require('../controllers/decano.controller');
@@ -31,7 +32,7 @@ router.get('/home', async (req, res) => {
 
       profesorId = studentInfo.ProfesorId;
 
-      tutor = await usuarioController.getUserById(profesorId);
+      tutor = await usuarioViewController.getUserById(profesorId);
     }
 
     // Actualiza las reuniones diarias
@@ -52,7 +53,7 @@ router.get('/tutor', async (req, res) => {
     studentInfo = await estudianteController.getEstudianteById(estudianteId);
     profesorId = studentInfo.ProfesorId;
 
-    tutor = await usuarioController.getUserById(profesorId);
+    tutor = await usuarioViewController.getUserById(profesorId);
 
     res.json({ rol, studentInfo, tutor });
   } catch (error) {
@@ -77,6 +78,8 @@ router.get('/student', async (req, res) => {
   estudianteId = req.query.userId;
   try {
     estudiante = await estudianteViewController.getEstudianteById(estudianteId);
+
+    console.log("Estudiante: ", estudiante);
     res.json({ estudiante });
   } catch (error) {
     console.error(error.message);
@@ -134,7 +137,7 @@ router.post('/change-password', async (req, res) => {
       req.body.userId
     );
 
-    usuario = await usuarioController.getUserById(req.body.userId);
+    usuario = await usuarioViewController.getUserById(req.body.userId);
 
     res.json(usuario);
   } catch(error) {
