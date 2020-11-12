@@ -76,11 +76,11 @@ reunionViewController.getReunionById = async (reunionId) => {
 
 reunionViewController.getLastMeetingId = async () => {
   try {
-    reunionId = await reunionView.findOne({
+    lastMeeting = await reunionView.findOne({
       order: [['id', 'DESC']]
     });
 
-    return reunionId.id;
+    return lastMeeting.id;
   } catch (error) {
     logger.error(error.message);
   }

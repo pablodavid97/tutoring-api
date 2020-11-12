@@ -2,12 +2,12 @@
   "name": "tutorias-api",
   "version": "1.0.0",
   "description": "RestApi tutorias",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server/app.js",
+    "dev": "nodemon src/server.js",
     "lint": "eslint . --ext .js",
-    "format": "prettier --config .prettierrc 'server/**/*.js' --write && echo 'Prettier format complete'"
+    "format": "prettier --config .prettierrc 'src/**/*.js' --write && echo 'Prettier format complete'"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +19,7 @@
     "http-errors": "^1.8.0",
     "http-status-codes": "^2.1.4",
     "morgan": "^1.10.0",
+    "multer": "^1.4.2",
     "mysql2": "^2.2.5",
     "nodemailer": "^6.4.14",
     "nodemailer-express-handlebars": "^4.0.0",

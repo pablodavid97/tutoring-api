@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { databaseConfig } = require('./db.config');
+const { databaseConfig } = require('../config/db.config');
 const database = {};
 const Sequelize = require('sequelize');
 
@@ -32,7 +32,13 @@ database.profesor = require('./entities/profesor.model')(database.sequelize);
 database.estudiante = require('./entities/estudiante.model')(
   database.sequelize
 );
-database.reunion = require('./entities/reunion.model')(database.sequelize);
+database.reunion = require('./entities/reunion.model')(
+  database.sequelize
+);
+
+database.usuarioView = require('./entities/usuario-view.model')(
+  database.sequelize
+);
 database.estudianteView = require('./entities/estudiante-view.model')(
   database.sequelize
 );
@@ -48,6 +54,7 @@ database.notificacion = require('./entities/notificacion.model')(
 database.notificacionView = require('./entities/notificacion-view.model')(
   database.sequelize
 );
+database.imagen = require('./entities/imagen.model')(database.sequelize)
 
 // establece las relaciones entre las entidades
 
@@ -64,6 +71,9 @@ database.profesor.belongsTo(database.usuario, { as: 'usuario' });
 
 database.usuario.hasMany(database.estudiante, { as: 'estudiante' });
 database.estudiante.belongsTo(database.usuario, { as: 'usuario' });
+
+database.imagen.hasMany(database.usuario, { as: 'usuario'});
+database.usuario.belongsTo(database.imagen, { as: 'imagen'});
 
 // relacion profesor-estudiante
 database.profesor.hasMany(database.estudiante, { as: 'estudiante' });

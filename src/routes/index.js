@@ -2,6 +2,7 @@ const { log } = require('winston');
 const express = require('express');
 const router = express.Router();
 const usuarioController = require('../controllers/usuario.controller');
+const usuarioViewController = require('../controllers/usuario-view.controller');
 const rolController = require('../controllers/rol.controller');
 const estudianteController = require('../controllers/estudiante.controller');
 const decanoController = require('../controllers/decano.controller');
@@ -12,6 +13,8 @@ const reunionViewController = require('../controllers/reunion-view.controller');
 const profesorViewController = require('../controllers/profesor-view.controller');
 const notificacionViewController = require('../controllers/notificacion-view.controller');
 const { logger } = require('../utils/logger');
+const imagenController = require('../controllers/imagen.controller');
+
 
 router.get('/home', async (req, res) => {
   usuarioId = req.query.userId;
@@ -29,7 +32,7 @@ router.get('/home', async (req, res) => {
 
       profesorId = studentInfo.ProfesorId;
 
-      tutor = await usuarioController.getUserById(profesorId);
+      tutor = await usuarioViewController.getUserById(profesorId);
     }
 
     // Actualiza las reuniones diarias
@@ -50,7 +53,7 @@ router.get('/tutor', async (req, res) => {
     studentInfo = await estudianteController.getEstudianteById(estudianteId);
     profesorId = studentInfo.ProfesorId;
 
-    tutor = await usuarioController.getUserById(profesorId);
+    tutor = await usuarioViewController.getUserById(profesorId);
 
     res.json({ rol, studentInfo, tutor });
   } catch (error) {
@@ -75,6 +78,8 @@ router.get('/student', async (req, res) => {
   estudianteId = req.query.userId;
   try {
     estudiante = await estudianteViewController.getEstudianteById(estudianteId);
+
+    console.log("Estudiante: ", estudiante);
     res.json({ estudiante });
   } catch (error) {
     console.error(error.message);
@@ -101,15 +106,66 @@ router.get('/notifications', async (req, res) => {
 
     rol = await rolController.getRolById(rolId);
 
-    notifications = await notificacionViewController.getNotificationsByUserId(
-      userId
-    );
+    notifications = await notificacionViewController.getNotificationsByUserId(userId)
 
     res.json({ rol, notifications });
   } catch (error) {
     console.error(error.message);
   }
 });
+
+router.post('/edit-profile', async (req, res) => {
+  try {
+    lastNames = req.body.lastNames
+    firstNames = req.body.firstNames
+    email = req.body.email
+    phone = req.body.phone
+    userId = req.body.userId
+    file = req.body.file
+
+    lastImageId = undefined
+
+    if(file) {
+      image = await imagenController.uploadFile(file)
+
+      lastImageId = await imagenController.getLastImageId() 
+    }
+
+    console.log("IMagen Id: ", lastImageId);
+
+    await usuarioController.setUserProfile(firstNames, lastNames, email, phone, userId, lastImageId)
+
+    res.json({ status: 'ok' });
+  } catch (error) {
+    logger.error(error.message)
+  }
+})
+
+router.post('/change-password', async (req, res) => {
+  try{
+    await usuarioController.setUserPassword(
+      req.body.hash,
+      req.body.userId
+    );
+
+    usuario = await usuarioViewController.getUserById(req.body.userId);
+
+    res.json(usuario);
+  } catch(error) {
+    logger.error(error.message)
+  }
+})
+
+router.post('/upload', async (req, res) => {
+  try {
+    console.log("Datos Ingresados: ", req.body);
+    upload = await imagenController.uploadFile(req.body.file)
+
+    console.log("Message: ", upload);
+  } catch (error) {
+    logger.error(error.message)
+  }
+})
 
 //Decano
 router.get('/decanos', async (req, res) => {
@@ -157,40 +213,6 @@ router.get('/roles', async (req, res) => {
 router.get('/usuarios', async (req, res) => {
   let users = await usuarioController.getAllUsers();
   res.json(users);
-});
-
-router.post('/edit-profile', async (req, res) => {
-  try {
-    lastNames = req.body.lastNames;
-    firstNames = req.body.firstNames;
-    email = req.body.email;
-    phone = req.body.phone;
-    userId = req.body.userId;
-
-    await usuarioController.setUserProfile(
-      firstNames,
-      lastNames,
-      email,
-      phone,
-      userId
-    );
-
-    res.json({ status: 'ok' });
-  } catch (error) {
-    logger.error(error.message);
-  }
-});
-
-router.post('/change-password', async (req, res) => {
-  try {
-    await usuarioController.setUserPassword(req.body.hash, req.body.userId);
-
-    usuario = await usuarioController.getUserById(req.body.userId);
-
-    res.json(usuario);
-  } catch (error) {
-    logger.error(error.message);
-  }
 });
 
 module.exports = router;

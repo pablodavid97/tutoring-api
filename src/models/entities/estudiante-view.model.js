@@ -47,6 +47,18 @@ module.exports = (sequelize) => {
       },
       profesorId: {
         type: DataTypes.INTEGER
+      },
+      imagenId: {
+        type: DataTypes.INTEGER
+      },
+      formatoImagen: {
+          type: DataTypes.STRING
+      },
+      nombreImagen: {
+          type: DataTypes.STRING
+      },
+      imagen: {
+          type: DataTypes.BLOB("long")
       }
     },
     {

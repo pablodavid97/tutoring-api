@@ -3,11 +3,11 @@ const hbs = require('nodemailer-express-handlebars');
 
 const options = {
   viewEngine: {
-    layoutsDir: global.appRoot + '/views/layouts',
+    layoutsDir: global.srcDir + '/views/layouts',
     extname: '.hbs'
   },
   extName: '.hbs',
-  viewPath: 'server/views'
+  viewPath: 'src/views'
 };
 
 let transport = nodemailer.createTransport({

@@ -28,8 +28,8 @@ app.engine(
 
 // MIDDLEWARES
 app.use(expressLogger);
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit: '50mb'}));
+app.use(express.json({limit: '50mb'}));
 
 const errorHandler = (err, req, res, next) => {
   if (environment === 'dev') {
@@ -41,7 +41,8 @@ const errorHandler = (err, req, res, next) => {
 };
 app.use(errorHandler);
 
-global.appRoot = path.resolve(__dirname);
+global.srcDir = path.resolve(__dirname);
+global.appRoot = path.resolve(__dirname, "../");
 
 // Routes
 app.use(require('./routes/index'));
