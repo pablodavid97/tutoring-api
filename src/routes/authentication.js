@@ -17,17 +17,9 @@ router.get('/user-by-email', async (req, res) => {
   try {
     user = await usuarioViewController.getUserByEmail(req.query.email);
 
-    user.imagen = user.imagen.toString('binary')
-
-    // console.log("Tipo de imagen: ", typeof(user.imagen));
-    // console.log("Imagen: ", user.imagen.toString('binary'));
-
-    // fs.writeFileSync(
-    //   global.appRoot + "/resources/static/assets/tmp/" + user.nombreImagen,
-    //   user.image
-    // );
-
-    // console.log("User: ", user)
+    if(user) {
+      user.imagen = user.imagen.toString('binary')
+    }
 
     res.json(user);
   } catch (error) {
@@ -38,10 +30,10 @@ router.get('/user-by-email', async (req, res) => {
 router.get('/user-by-id', async (req, res) => {
   try {
     user = await usuarioViewController.getUserById(req.query.userId);
-
-    // user.imagen = user.imagen.toString("binary")
-
-    // console.log("User: ", user)
+    
+    if(user) {
+      user.imagen = user.imagen.toString('binary')
+    }
 
     res.json(user);
   } catch (error) {

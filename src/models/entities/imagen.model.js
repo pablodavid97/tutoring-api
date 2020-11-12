@@ -17,10 +17,7 @@ module.exports = (sequelize) => {
       datos: {
           type: DataTypes.BLOB('long')
       },
-      createdOn: {
-          type: DataTypes.DATE
-      },
-      updatedOn: {
+      uploadedOn: {
           type: DataTypes.DATE
       }
     },

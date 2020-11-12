@@ -121,8 +121,19 @@ router.post('/edit-profile', async (req, res) => {
     email = req.body.email
     phone = req.body.phone
     userId = req.body.userId
+    file = req.body.file
 
-    await usuarioController.setUserProfile(firstNames, lastNames, email, phone, userId)
+    lastImageId = undefined
+
+    if(file) {
+      image = await imagenController.uploadFile(file)
+
+      lastImageId = await imagenController.getLastImageId() 
+    }
+
+    console.log("IMagen Id: ", lastImageId);
+
+    await usuarioController.setUserProfile(firstNames, lastNames, email, phone, userId, lastImageId)
 
     res.json({ status: 'ok' });
   } catch (error) {

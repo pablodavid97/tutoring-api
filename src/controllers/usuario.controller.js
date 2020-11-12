@@ -103,7 +103,8 @@ usuarioController.setUserProfile = async (
   lastNames,
   email,
   phone,
-  userId
+  userId,
+  imageId
 ) => {
   try {
     if (firstNames) {
@@ -148,6 +149,14 @@ usuarioController.setUserProfile = async (
           }
         }
       );
+    }
+
+    if (imageId) {
+      await usuario.update({imagenId: imageId}, {
+        where: {
+          id: userId
+        }
+      })
     }
   } catch (error) {
     logger.error(error.message);

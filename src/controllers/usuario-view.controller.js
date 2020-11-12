@@ -16,12 +16,16 @@ usuarioViewController.getUserById = async (userId) => {
   
   // FIND BY FIELD
   usuarioViewController.getUserByEmail = async (email) => {
+    console.log("email: ", email);
+
     try {
       user = await usuarioView.findAll({
         where: {
           correoInstitucional: email
         }
       });
+
+      console.log("User: ", user)
   
       return user[0];
     } catch (error) {

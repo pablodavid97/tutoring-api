@@ -8,17 +8,19 @@ imagenController.uploadFile = async (file) => {
     try {        
         if(file === undefined) {
             console.log('You must select a file.')
-            return
+            return null
         }
 
+        const filePath = global.appRoot + "/resources/static/assets/tmp/" + file.nombre
+
+        console.log("Creating file into system");
+
         fs.writeFileSync(
-            global.appRoot + "/resources/static/assets/tmp/" + file.nombre,
+            filePath,
             new Buffer.from(file.datos, "binary")
         );
 
-        imageData = fs.readFileSync(global.appRoot + "/resources/static/assets/tmp/" + file.nombre)
-        
-        console.log("File has been uploaded");
+        imageData = fs.readFileSync(filePath)
 
         image = await imagen.create({
             formato: file.formato,
@@ -36,11 +38,32 @@ imagenController.uploadFile = async (file) => {
           }
         )
 
+        console.log("File has been stored into DB");
+
+        console.log("Deleting created file from system...");
+          
+        // removes file after saved into DB 
+        fs.unlinkSync(filePath)
+
+        console.log("File has been deleted");
+
         return image
 
     } catch (error) {
         logger.error(error.message)
         return `Error when trying to upload image: ${error}`
+    }
+};
+
+imagenController.getLastImageId = async () => {
+    try {
+      lastImage = await imagen.findOne({
+        order: [['id', 'DESC']]
+      });
+  
+      return lastImage.id;
+    } catch (error) {
+      logger.error(error.message);
     }
 };
 
