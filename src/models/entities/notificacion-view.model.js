@@ -8,6 +8,9 @@ module.exports = (sequelize) => {
         type: DataTypes.INTEGER,
         primaryKey: true
       },
+      estadoNotificacionId: {
+        type: DataTypes.INTEGER
+      },
       usuarioId: {
         type: DataTypes.INTEGER
       },

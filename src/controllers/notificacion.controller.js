@@ -8,10 +8,11 @@ notificacionController.createNotificacion = async (reunionId, usuarioId) => {
     userNotification = await notificacion.create(
       {
         reunionId: reunionId,
-        usuarioId: usuarioId
+        usuarioId: usuarioId,
+        estadoNotificacionId: 1
       },
       {
-        fields: ['reunionId', 'usuarioId']
+        fields: ['reunionId', 'usuarioId', 'estadoNotificacionId']
       }
     );
 
@@ -47,18 +48,19 @@ notificacionController.deleteAllNotificationsByMeetingId = async (
   }
 };
 
-notificacionController.getNotificationByMeetingId = async (meetingId) => {
+notificacionController.updateNotificationStatus = async (status, notificationid) => {
   try {
-    notification = await notificacion.findAll({
-      where: {
-        reunionId: meetingId
+    await notificacion.update(
+      { estadoNotificacionId: status},
+      {
+        where: {
+          id: notificationid
+        }
       }
-    });
-
-    return notification[0];
+    )
   } catch (error) {
-    logger.error(error.message);
+    logger.error(error.message)
   }
-};
+}
 
 module.exports = notificacionController;

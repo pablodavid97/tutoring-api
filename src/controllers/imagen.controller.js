@@ -26,14 +26,14 @@ imagenController.uploadFile = async (file) => {
             formato: file.formato,
             nombre: file.nombre,
             datos: imageData,
-            createdOn: file.createdOn
+            uploadedOn: file.uploadedOn
         },
         {
             fields: [
               'formato',
               'nombre',
               'datos',
-              'createdOn'
+              'uploadedOn'
             ]
           }
         )

@@ -14,6 +14,7 @@ const profesorViewController = require('../controllers/profesor-view.controller'
 const notificacionViewController = require('../controllers/notificacion-view.controller');
 const { logger } = require('../utils/logger');
 const imagenController = require('../controllers/imagen.controller');
+const notificacionController = require('../controllers/notificacion.controller');
 
 
 router.get('/home', async (req, res) => {
@@ -110,9 +111,51 @@ router.get('/notifications', async (req, res) => {
 
     res.json({ rol, notifications });
   } catch (error) {
-    console.error(error.message);
+    logger.error(error.message);
   }
 });
+
+router.get('/active-notifications', async (req, res) => {
+  try {
+    notifications = await notificacionViewController.getActiveNotificationsByUserId(req.query.userId)
+
+    res.json({notifications})
+  } catch (error) {
+    logger.error(error.message)
+  }
+})
+
+router.post('/delete-notification', async (req, res) => {
+  try {
+    await notificacionController.deleteNotificacion(req.body.notificationId)
+
+    res.json({ status: 'ok' });
+  } catch (error) {
+    logger.error(error.message)
+  }
+});
+
+router.post('/archive-notification', async (req, res) => {
+  try {
+    await notificacionController.updateNotificationStatus(3, req.body.notificationId)
+
+    res.json({ status: 'ok' });
+  } catch (error) {
+    logger.error(error.message)
+  }
+});
+
+router.post('/viewed-notification', async (req, res) => {
+  try {
+    console.log("Data: ", req.body);
+
+    await notificacionController.updateNotificationStatus(2, req.body.notificationId)
+
+    res.json({status: "ok"})
+  } catch (error) {
+    logger.error(error.message)
+  }
+})
 
 router.post('/edit-profile', async (req, res) => {
   try {
@@ -130,8 +173,6 @@ router.post('/edit-profile', async (req, res) => {
 
       lastImageId = await imagenController.getLastImageId() 
     }
-
-    console.log("IMagen Id: ", lastImageId);
 
     await usuarioController.setUserProfile(firstNames, lastNames, email, phone, userId, lastImageId)
 
