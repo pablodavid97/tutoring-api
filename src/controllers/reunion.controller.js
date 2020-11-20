@@ -24,7 +24,8 @@ reunionController.createMeeting = async (
   date,
   professorId,
   studentId,
-  email
+  semestreId,
+  email,
 ) => {
   try {
     meeting = await reunion.create(
@@ -34,6 +35,7 @@ reunionController.createMeeting = async (
         fecha: date,
         profesorId: professorId,
         estudianteId: studentId,
+        semestreId: semestreId,
         estadoId: 1,
         createdBy: email,
         createdOn: new Date()
@@ -46,6 +48,7 @@ reunionController.createMeeting = async (
           'profesorId',
           'estudianteId',
           'estadoId',
+          'semestreId',
           'createdBy',
           'createdOn'
         ]
@@ -186,7 +189,7 @@ reunionController.editMeetingProfessorComment = async (
   }
 };
 
-reunionController.getReuniones = async () => {
+reunionController.getAllReuniones = async () => {
   try {
     reuniones = await reunion.findAll();
 
@@ -197,8 +200,9 @@ reunionController.getReuniones = async () => {
 };
 
 reunionController.setDailyMeetings = async () => {
+  console.log("Entro!");
   try {
-    meetings = await reunionController.getReuniones();
+    meetings = await reunionController.getAllReuniones();
     meetingsNum = meetings.length;
 
     dateTime = new Date();

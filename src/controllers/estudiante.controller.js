@@ -2,6 +2,7 @@ const { logger } = require('../utils/logger');
 const database = require('../models/connection-manager');
 const estudiante = database.estudiante;
 const estudianteController = {};
+const gpaPorSemestreController = require('./gpa-por-semestre.controller')
 const { Sequelize } = require('sequelize');
 
 estudianteController.getEstudianteById = async (estudianteId) => {
@@ -26,13 +27,22 @@ estudianteController.getAllStudents = async () => {
 
 estudianteController.getAverageGPA = async () => {
   try {
-    userNum = await estudianteController.getAllStudents();
+    // placeholder
+    students = await estudianteController.getAllStudents()
+    studentNum = students.length
 
-    globalGPA = await estudiante.sum('gpa');
+    globalGPA = 0
+    for(var i = 0; i < studentNum; i++) {
+      gpa = await gpaPorSemestreController.getAverageGPAByStudent(students[i].id)
+      globalGPA += gpa
+    }
 
-    averageGPA = globalGPA / userNum.length;
+    averageGPA = globalGPA / studentNum
 
-    return averageGPA.toFixed(2);
+    console.log("GPA: ", averageGPA);
+
+    return averageGPA.toFixed(2)
+
   } catch (error) {
     logger.error(error.message);
   }
@@ -40,20 +50,36 @@ estudianteController.getAverageGPA = async () => {
 
 estudianteController.getConditionedStudents = async () => {
   try {
-    users = await estudiante.findAll({
-      where: {
-        gpa: {
-          [Sequelize.Op.lt]: 3
-        }
-      }
-    });
+    // placeholder
+    students = await estudiante.findAll();
+    studentsNum = students.length
 
-    return users;
+    conditionedUsers = []
+    for(var i = 0; i < studentsNum; i++) {
+      gpa = await gpaPorSemestreController.getAverageGPAByStudent(students[i].id)
+
+      if(gpa < 2.5) {
+        conditionedUsers.push(students[i])
+      }
+    }
+
+    return conditionedUsers;
   } catch (error) {
     logger.error(error.message);
   }
 };
 
+estudianteController.getAverageGPABySemestre = async (semesterId) => {
+  try {
+    // placeholder
+    averageGPA = 2
+ 
+    return averageGPA.toFixed(2);
+  } catch (error) {
+    logger.error(error.message);
+  }
+}
+ 
 // estudianteController.getEstudianteByField = async () => {
 
 // }

@@ -63,4 +63,18 @@ notificacionController.updateNotificationStatus = async (status, notificationid)
   }
 }
 
+notificacionController.getNotificationByMeetingId = async (meetingId) => {
+  try {
+    notification = await notificacion.findAll({
+      where: {
+        reunionId: meetingId
+      }
+    });
+
+    return notification[0]
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
+
 module.exports = notificacionController;

@@ -56,7 +56,16 @@ database.notificacionView = require('./entities/notificacion-view.model')(
 );
 database.estadoNotificacion = require('./entities/estado-notificacion.model')(
   database.sequelize
-)
+);
+database.carrera = require('./entities/carrera.model')(
+  database.sequelize
+);
+database.semestre = require('./entities/semestre.model')(
+  database.sequelize
+);
+database.gpaPorSemestre = require('./entities/gpa-por-semestre.model')(
+  database.sequelize
+);
 database.imagen = require('./entities/imagen.model')(database.sequelize)
 
 // establece las relaciones entre las entidades
@@ -103,6 +112,25 @@ database.notificacion.belongsTo(database.reunion, { as: 'reunion' });
 // relacion notificacion - estadoNotificacion
 database.estadoNotificacion.hasMany(database.notificacion, { as: 'notificacion'})
 database.notificacion.belongsTo(database.estadoNotificacion, { as: 'estadoNotificacion'})
+
+// relacion decano-carrera
+database.carrera.hasMany(database.decano, {as: "decano"})
+database.decano.belongsTo(database.carrera, {as: "carrera"})
+
+// relacion estudiante-carrera
+database.carrera.hasMany(database.estudiante, {as: "estudiante"})
+database.estudiante.belongsTo(database.carrera, {as: "carrera"})
+
+// relacion profesor-carrera
+database.carrera.hasMany(database.profesor, {as: "profesor"})
+database.profesor.belongsTo(database.carrera, {as: "carrera"})
+
+// relacion muchos a muchos estudiante-semestre
+database.estudiante.hasMany(database.gpaPorSemestre, {as: "gpaPorSemestre"})
+database.gpaPorSemestre.belongsTo(database.estudiante, {as: "estudiante"})
+
+database.semestre.hasMany(database.gpaPorSemestre, {as: "gpaPorSemestre"})
+database.gpaPorSemestre.belongsTo(database.semestre, {as: "semestre"})
 
 // CONNECTION
 database.connect = async () => {

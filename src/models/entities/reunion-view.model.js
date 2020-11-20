@@ -48,6 +48,12 @@ module.exports = (sequelize) => {
       },
       estado: {
         type: DataTypes.STRING
+      },
+      semestreId: {
+        type: DataTypes.INTEGER
+      },
+      semestre: {
+        type: DataTypes.STRING
       }
     },
     {

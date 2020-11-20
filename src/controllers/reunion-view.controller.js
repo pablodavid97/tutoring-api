@@ -38,7 +38,7 @@ reunionViewController.getReunionesByStudent = async (userId) => {
   }
 };
 
-reunionViewController.getReuniones = async () => {
+reunionViewController.getAllReuniones = async () => {
   try {
     reuniones = await reunionView.findAll();
 
@@ -85,5 +85,19 @@ reunionViewController.getLastMeetingId = async () => {
     logger.error(error.message);
   }
 };
+
+reunionViewController.getReunionesBySemestre = async (semesterId) => {
+  try {
+    reuniones = await reunionView.findAll({
+      where: {
+        semestreId: semesterId
+      }
+    });
+
+    return reuniones;
+  } catch (error) {
+    logger.error(error.message);
+  }
+}
 
 module.exports = reunionViewController;

@@ -1,21 +1,23 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-  const Profesor = sequelize.define(
-    'Profesor',
+  const GpaPorSemestre = sequelize.define(
+    'GpaPorSemestre',
     {
       id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         primaryKey: true
       },
+      gpa: {
+          type: DataTypes.STRING
+      }
     },
     {
       underscored: true,
-      tableName: 'profesor',
+      tableName: 'gpa_por_semestre',
       timestamps: false
     }
   );
 
-  return Profesor;
+  return GpaPorSemestre;
 };

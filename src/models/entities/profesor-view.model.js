@@ -21,6 +21,9 @@ module.exports = (sequelize) => {
       hash: {
         type: DataTypes.STRING
       },
+      carreraId: {
+        type: DataTypes.INTEGER
+      },
       carrera: {
         type: DataTypes.STRING
       },

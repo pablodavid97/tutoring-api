@@ -9,12 +9,6 @@ module.exports = (sequelize) => {
         allowNull: false,
         primaryKey: true
       },
-      carrera: {
-        type: DataTypes.STRING
-      },
-      gpa: {
-        type: DataTypes.FLOAT
-      },
       status: {
         type: DataTypes.STRING
       },

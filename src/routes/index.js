@@ -15,6 +15,9 @@ const notificacionViewController = require('../controllers/notificacion-view.con
 const { logger } = require('../utils/logger');
 const imagenController = require('../controllers/imagen.controller');
 const notificacionController = require('../controllers/notificacion.controller');
+const semestreController = require('../controllers/semester.controller');
+const gpaPorSemestreController = require('../controllers/gpa-por-semestre.controller');
+const { Console } = require('winston/lib/winston/transports');
 
 
 router.get('/home', async (req, res) => {
@@ -25,13 +28,16 @@ router.get('/home', async (req, res) => {
 
   studentInfo = undefined;
   tutor = undefined;
+  gpa = 0;
 
   try {
     rol = await rolController.getRolById(rolId);
     if (isStudent) {
-      studentInfo = await estudianteController.getEstudianteById(usuarioId);
+      studentInfo = await estudianteViewController.getEstudianteById(usuarioId);
 
-      profesorId = studentInfo.ProfesorId;
+      gpa = await gpaPorSemestreController.getAverageGPAByStudent(studentInfo.id);
+
+      profesorId = studentInfo.profesorId;
 
       tutor = await usuarioViewController.getUserById(profesorId);
     }
@@ -39,7 +45,7 @@ router.get('/home', async (req, res) => {
     // Actualiza las reuniones diarias
     await reunionController.setDailyMeetings();
 
-    res.send({ rol, studentInfo, tutor });
+    res.send({ rol, studentInfo, tutor, gpa });
   } catch (error) {
     console.error(error.message);
   }
@@ -79,26 +85,52 @@ router.get('/student', async (req, res) => {
   estudianteId = req.query.userId;
   try {
     estudiante = await estudianteViewController.getEstudianteById(estudianteId);
+    gpa = await gpaPorSemestreController.getAverageGPAByStudent(estudianteId);
 
-    console.log("Estudiante: ", estudiante);
-    res.json({ estudiante });
+    res.json({ estudiante, gpa });
   } catch (error) {
     console.error(error.message);
+  }
+});
+
+router.get('/semesters', async (req, res) => {
+  try {
+    semestres = await semestreController.getAllSemestres()
+    res.json({semestres})
+  } catch (error) {
+    logger.error(error.message)
   }
 });
 
 router.get('/reports', async (req, res) => {
   try {
-    reuniones = await reunionViewController.getReunionesActivas();
-    gpa = await estudianteController.getAverageGPA();
+    reuniones = await reunionViewController.getAllReuniones();
     activeUsers = await usuarioController.getActiveUsers();
+    activeUsersNum = activeUsers.length
     conditionedUsers = await estudianteController.getConditionedStudents();
+    conditionedUsersNum = conditionedUsers.length
 
-    res.json({ reuniones, gpa, activeUsers, conditionedUsers });
+    gpa = await estudianteController.getAverageGPA();
+
+    res.json({ reuniones, gpa, activeUsersNum, conditionedUsersNum });
   } catch (error) {
-    console.error(error.message);
+    logger.error(error.message);
   }
 });
+
+router.get('/reports-by-semester/', async (req, res) => {
+  try {
+    semesterId = req.query.semesterId
+
+    reuniones = await reunionViewController.getReunionesBySemestre(semesterId)
+    gpa = await estudianteController.getAverageGPABySemestre(semesterId)
+
+  } catch (error) {
+    logger.error(error.message)
+  }
+
+
+})
 
 router.get('/notifications', async (req, res) => {
   try {
@@ -147,8 +179,6 @@ router.post('/archive-notification', async (req, res) => {
 
 router.post('/viewed-notification', async (req, res) => {
   try {
-    console.log("Data: ", req.body);
-
     await notificacionController.updateNotificationStatus(2, req.body.notificationId)
 
     res.json({status: "ok"})
@@ -199,10 +229,8 @@ router.post('/change-password', async (req, res) => {
 
 router.post('/upload', async (req, res) => {
   try {
-    console.log("Datos Ingresados: ", req.body);
     upload = await imagenController.uploadFile(req.body.file)
 
-    console.log("Message: ", upload);
   } catch (error) {
     logger.error(error.message)
   }
