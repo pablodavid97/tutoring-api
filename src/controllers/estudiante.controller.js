@@ -39,8 +39,6 @@ estudianteController.getAverageGPA = async () => {
 
     averageGPA = globalGPA / studentNum
 
-    console.log("GPA: ", averageGPA);
-
     return averageGPA.toFixed(2)
 
   } catch (error) {

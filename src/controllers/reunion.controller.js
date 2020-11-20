@@ -200,7 +200,6 @@ reunionController.getAllReuniones = async () => {
 };
 
 reunionController.setDailyMeetings = async () => {
-  console.log("Entro!");
   try {
     meetings = await reunionController.getAllReuniones();
     meetingsNum = meetings.length;
