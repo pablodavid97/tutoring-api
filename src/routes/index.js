@@ -105,14 +105,19 @@ router.get('/semesters', async (req, res) => {
 router.get('/reports', async (req, res) => {
   try {
     reuniones = await reunionViewController.getAllReuniones();
-    activeUsers = await usuarioController.getActiveUsers();
-    activeUsersNum = activeUsers.length
+    reunionesEliminadas = await reunionViewController.getReunionesEliminadas();
     conditionedUsers = await estudianteController.getConditionedStudents();
     conditionedUsersNum = conditionedUsers.length
 
+    console.log("Reuniones Creadas")
+    console.log(reuniones.length)
+
+    console.log("Reuniones Eliminadas");
+    console.log(reunionesEliminadas.length)
+
     gpa = await estudianteController.getAverageGPA();
 
-    res.json({ reuniones, gpa, activeUsersNum, conditionedUsersNum });
+    res.json({ reuniones, reunionesEliminadas, gpa, conditionedUsersNum });
   } catch (error) {
     logger.error(error.message);
   }
@@ -122,8 +127,27 @@ router.get('/reports-by-semester/', async (req, res) => {
   try {
     semesterId = req.query.semesterId
 
-    reuniones = await reunionViewController.getReunionesBySemestre(semesterId)
-    gpa = await estudianteController.getAverageGPABySemestre(semesterId)
+    if(semesterId === "0") {
+      reuniones = await reunionViewController.getAllReuniones();
+      
+      reunionesEliminadas = await reunionViewController.getReunionesEliminadas();
+      
+      conditionedUsers = await estudianteController.getConditionedStudents();
+      conditionedUsersNum = conditionedUsers.length
+      
+      gpa = await estudianteController.getAverageGPA();
+    } else {
+      reuniones = await reunionViewController.getReunionesBySemestre(semesterId)
+
+      reunionesEliminadas = await reunionViewController.getReunionesEliminadasBySemestre(semesterId)
+
+      conditionedUsers = await estudianteController.getConditionedStudentsBySemestre(semesterId);
+      conditionedUsersNum = conditionedUsers.length
+
+      gpa = await estudianteController.getAverageGPABySemestre(semesterId)
+    }
+
+    res.json({reuniones, reunionesEliminadas, gpa, conditionedUsersNum})
 
   } catch (error) {
     logger.error(error.message)

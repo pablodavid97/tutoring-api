@@ -21,4 +21,25 @@ gpaPorSemestreController.getAverageGPAByStudent = async (studentId) => {
     }
 }
 
+gpaPorSemestreController.getSemesterGPAByStudent = async (studentId, semesterId) => {
+    try {
+        data = await gpaPorSemestre.findAll({
+            where: {
+                estudianteId: studentId,
+                semestreId: semesterId
+            }
+        });
+        
+        if (data.length > 0) {
+            gpa = parseFloat(data[0].gpa)
+        } else {
+            gpa = undefined
+        }
+
+        return gpa
+    } catch (error) {
+        logger.error(error.message)
+    }
+}
+
 module.exports = gpaPorSemestreController;

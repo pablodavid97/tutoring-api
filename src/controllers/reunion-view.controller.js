@@ -42,6 +42,8 @@ reunionViewController.getAllReuniones = async () => {
   try {
     reuniones = await reunionView.findAll();
 
+    console.log("Todas las Reuniones: ", reuniones);
+
     return reuniones;
   } catch (error) {
     logger.error(error.message);
@@ -63,6 +65,20 @@ reunionViewController.getReunionesActivas = async () => {
     logger.error(error.message);
   }
 };
+
+reunionViewController.getReunionesEliminadas = async () => {
+  try {
+    reunionesEliminadas = await reunionView.findAll({
+      where: {
+        estadoId: 5
+      }
+    });
+
+    return reunionesEliminadas;
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
 
 reunionViewController.getReunionById = async (reunionId) => {
   try {
@@ -97,6 +113,21 @@ reunionViewController.getReunionesBySemestre = async (semesterId) => {
     return reuniones;
   } catch (error) {
     logger.error(error.message);
+  }
+}
+
+reunionViewController.getReunionesEliminadasBySemestre = async (semesterId) => {
+  try {
+    reunionesEliminadas = await reunionView.findAll({
+      where: {
+        estadoId: 5,
+        semestreId: semesterId
+      }
+    });
+
+    return reunionesEliminadas;
+  } catch (error) {
+    logger.error(error.message)
   }
 }
 
