@@ -66,6 +66,9 @@ database.semestre = require('./entities/semestre.model')(
 database.gpaPorSemestre = require('./entities/gpa-por-semestre.model')(
   database.sequelize
 );
+database.gpaView = require('./entities/gpa-view.model')(
+  database.sequelize
+);
 database.imagen = require('./entities/imagen.model')(database.sequelize)
 
 // establece las relaciones entre las entidades
