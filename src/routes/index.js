@@ -108,7 +108,6 @@ router.get('/carreras', async (req, res) => {
   try{
     carreras = await carreraController.getAllCarreras()
 
-    console.log("Carreras: ", carreras)
     res.json({carreras})
   } catch (error) {
     logger.error(error.message)
@@ -118,15 +117,11 @@ router.get('/carreras', async (req, res) => {
 router.get('/reports', async (req, res) => {
   try {
     reuniones = await reunionViewController.getAllReuniones();
+
     reunionesEliminadas = await reunionViewController.getReunionesEliminadas();
+
     conditionedUsers = await estudianteController.getConditionedStudents();
     conditionedUsersNum = conditionedUsers.length
-
-    console.log("Reuniones Creadas")
-    console.log(reuniones.length)
-
-    console.log("Reuniones Eliminadas");
-    console.log(reunionesEliminadas.length)
 
     gpa = await estudianteController.getAverageGPA();
 
@@ -172,8 +167,6 @@ router.get('/reports-by-carrera/', async (req, res) => {
   try {
     carreraId = req.query.carreraId
 
-    console.log("Carrera: ", carreraId);
-
     if(carreraId === "0") {
       reuniones = await reunionViewController.getAllReuniones();
       
@@ -185,6 +178,8 @@ router.get('/reports-by-carrera/', async (req, res) => {
       gpa = await estudianteController.getAverageGPA();
     } else {
       reuniones = await reunionViewController.getReunionesByCarrera(carreraId)
+
+      
 
       reunionesEliminadas = await reunionViewController.getReunionesEliminadasByCarrera(carreraId)
 

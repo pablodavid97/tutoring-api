@@ -155,13 +155,7 @@ estudianteController.getConditionedStudentsByCarrera = async (carreraId) => {
     for(var i = 0; i < studentsNum; i++) {
       gpa = await gpaPorSemestreController.getAverageGPAByStudent(students[i].id)
 
-      // console.log("Estudiante: ", students[i]);
-
-      console.log("Estudiante Carrera: ", typeof(students[i].carreraId));
-      console.log("Carrera: ", typeof(carreraId));
-
       if(gpa < 2.5 && students[i].carreraId.toString() === carreraId) {
-        console.log("True")
         conditionedUsers.push(students[i])
       }
     }

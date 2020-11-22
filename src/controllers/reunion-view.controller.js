@@ -42,8 +42,6 @@ reunionViewController.getAllReuniones = async () => {
   try {
     reuniones = await reunionView.findAll();
 
-    console.log("Todas las Reuniones: ", reuniones);
-
     return reuniones;
   } catch (error) {
     logger.error(error.message);
