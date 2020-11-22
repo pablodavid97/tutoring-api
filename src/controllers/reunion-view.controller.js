@@ -102,6 +102,7 @@ reunionViewController.getLastMeetingId = async () => {
   }
 };
 
+// Filtros por semestre
 reunionViewController.getReunionesBySemestre = async (semesterId) => {
   try {
     reuniones = await reunionView.findAll({
@@ -122,6 +123,36 @@ reunionViewController.getReunionesEliminadasBySemestre = async (semesterId) => {
       where: {
         estadoId: 5,
         semestreId: semesterId
+      }
+    });
+
+    return reunionesEliminadas;
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
+
+// Filtros por carrera
+reunionViewController.getReunionesByCarrera = async (carreraId) => {
+  try {
+    reuniones = await reunionView.findAll({
+      where: {
+        carreraId: carreraId
+      }
+    });
+
+    return reuniones;
+  } catch (error) {
+    logger.error(error.message);
+  }
+}
+
+reunionViewController.getReunionesEliminadasByCarrera = async (carreraId) => {
+  try {
+    reunionesEliminadas = await reunionView.findAll({
+      where: {
+        estadoId: 5,
+        carreraId: carreraId
       }
     });
 

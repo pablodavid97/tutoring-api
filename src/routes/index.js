@@ -17,6 +17,7 @@ const imagenController = require('../controllers/imagen.controller');
 const notificacionController = require('../controllers/notificacion.controller');
 const semestreController = require('../controllers/semester.controller');
 const gpaPorSemestreController = require('../controllers/gpa-por-semestre.controller');
+const carreraController = require('../controllers/carrera.controller');
 const { Console } = require('winston/lib/winston/transports');
 
 
@@ -93,6 +94,7 @@ router.get('/student', async (req, res) => {
   }
 });
 
+// value used for filters
 router.get('/semesters', async (req, res) => {
   try {
     semestres = await semestreController.getAllSemestres()
@@ -101,6 +103,17 @@ router.get('/semesters', async (req, res) => {
     logger.error(error.message)
   }
 });
+
+router.get('/carreras', async (req, res) => {
+  try{
+    carreras = await carreraController.getAllCarreras()
+
+    console.log("Carreras: ", carreras)
+    res.json({carreras})
+  } catch (error) {
+    logger.error(error.message)
+  }
+})
 
 router.get('/reports', async (req, res) => {
   try {
@@ -123,6 +136,7 @@ router.get('/reports', async (req, res) => {
   }
 });
 
+// filters applied
 router.get('/reports-by-semester/', async (req, res) => {
   try {
     semesterId = req.query.semesterId
@@ -152,8 +166,39 @@ router.get('/reports-by-semester/', async (req, res) => {
   } catch (error) {
     logger.error(error.message)
   }
+})
 
+router.get('/reports-by-carrera/', async (req, res) => {
+  try {
+    carreraId = req.query.carreraId
 
+    console.log("Carrera: ", carreraId);
+
+    if(carreraId === "0") {
+      reuniones = await reunionViewController.getAllReuniones();
+      
+      reunionesEliminadas = await reunionViewController.getReunionesEliminadas();
+      
+      conditionedUsers = await estudianteController.getConditionedStudents();
+      conditionedUsersNum = conditionedUsers.length
+      
+      gpa = await estudianteController.getAverageGPA();
+    } else {
+      reuniones = await reunionViewController.getReunionesByCarrera(carreraId)
+
+      reunionesEliminadas = await reunionViewController.getReunionesEliminadasByCarrera(carreraId)
+
+      conditionedUsers = await estudianteController.getConditionedStudentsByCarrera(carreraId);
+      conditionedUsersNum = conditionedUsers.length
+
+      gpa = await estudianteController.getAverageGPAByCarrera(carreraId)
+    }
+
+    res.json({reuniones, reunionesEliminadas, gpa, conditionedUsersNum})
+
+  } catch (error) {
+    logger.error(error.message)
+  }
 })
 
 router.get('/notifications', async (req, res) => {

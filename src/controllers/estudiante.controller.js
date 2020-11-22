@@ -4,6 +4,7 @@ const estudiante = database.estudiante;
 const estudianteController = {};
 const gpaPorSemestreController = require('./gpa-por-semestre.controller')
 const { Sequelize } = require('sequelize');
+const { parse } = require('path');
 
 estudianteController.getEstudianteById = async (estudianteId) => {
   try {
@@ -67,9 +68,9 @@ estudianteController.getConditionedStudents = async () => {
   }
 };
 
+// Filtros por semestre
 estudianteController.getAverageGPABySemestre = async (semesterId) => {
   try {
-    // placeholder
     students = await estudianteController.getAllStudents()
     studentNum = students.length
 
@@ -97,7 +98,6 @@ estudianteController.getAverageGPABySemestre = async (semesterId) => {
 
 estudianteController.getConditionedStudentsBySemestre = async (semesterId) => {
   try {
-    // placeholder
     students = await estudiante.findAll();
     studentsNum = students.length
 
@@ -116,8 +116,60 @@ estudianteController.getConditionedStudentsBySemestre = async (semesterId) => {
   }
 };
  
-// estudianteController.getEstudianteByField = async () => {
+// Filtros por carrera
+estudianteController.getAverageGPAByCarrera = async (carreraId) => {
+  try {
+    students = await estudianteController.getAllStudents()
+    studentNum = students.length
 
-// }
+    globalGPA = 0
+    studentCounter = 0
+    for(var i = 0; i < studentNum; i++) {
+      gpa = await gpaPorSemestreController.getAverageGPAByStudent(students[i].id)
+
+      if(students[i].carreraId.toString() === carreraId){
+        globalGPA += gpa
+        studentCounter += 1
+      }
+    }
+
+    averageGPA = 0 
+
+    if(globalGPA > 0 && studentCounter > 0) {
+      averageGPA = (globalGPA / studentCounter).toFixed(2)
+    }
+
+    return averageGPA 
+
+  } catch (error) {
+    logger.error(error.message);
+  }
+}
+
+estudianteController.getConditionedStudentsByCarrera = async (carreraId) => {
+  try {
+    students = await estudiante.findAll();
+    studentsNum = students.length
+
+    conditionedUsers = []
+    for(var i = 0; i < studentsNum; i++) {
+      gpa = await gpaPorSemestreController.getAverageGPAByStudent(students[i].id)
+
+      // console.log("Estudiante: ", students[i]);
+
+      console.log("Estudiante Carrera: ", typeof(students[i].carreraId));
+      console.log("Carrera: ", typeof(carreraId));
+
+      if(gpa < 2.5 && students[i].carreraId.toString() === carreraId) {
+        console.log("True")
+        conditionedUsers.push(students[i])
+      }
+    }
+
+    return conditionedUsers;
+  } catch (error) {
+    logger.error(error.message);
+  }
+};
 
 module.exports = estudianteController;
