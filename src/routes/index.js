@@ -18,8 +18,7 @@ const notificacionController = require('../controllers/notificacion.controller')
 const semestreController = require('../controllers/semester.controller');
 const gpaPorSemestreController = require('../controllers/gpa-por-semestre.controller');
 const carreraController = require('../controllers/carrera.controller');
-const { Console } = require('winston/lib/winston/transports');
-
+const gpaViewController = require('../controllers/gpa-view.controller')
 
 router.get('/home', async (req, res) => {
   usuarioId = req.query.userId;
@@ -30,23 +29,28 @@ router.get('/home', async (req, res) => {
   studentInfo = undefined;
   tutor = undefined;
   gpa = 0;
+  gpaList = {}
 
   try {
     rol = await rolController.getRolById(rolId);
     if (isStudent) {
       studentInfo = await estudianteViewController.getEstudianteById(usuarioId);
 
-      gpa = await gpaPorSemestreController.getAverageGPAByStudent(studentInfo.id);
-
       profesorId = studentInfo.profesorId;
 
       tutor = await usuarioViewController.getUserById(profesorId);
+
+      gpa = await gpaPorSemestreController.getAverageGPAByStudent(studentInfo.id);
+
+      gpaList = await gpaViewController.getGPAListByStudent(studentInfo.id);
+
+      console.log("GPA list: ", gpaList);
     }
 
     // Actualiza las reuniones diarias
     await reunionController.setDailyMeetings();
 
-    res.send({ rol, studentInfo, tutor, gpa });
+    res.send({ rol, studentInfo, tutor, gpa, gpaList});
   } catch (error) {
     console.error(error.message);
   }
@@ -87,8 +91,11 @@ router.get('/student', async (req, res) => {
   try {
     estudiante = await estudianteViewController.getEstudianteById(estudianteId);
     gpa = await gpaPorSemestreController.getAverageGPAByStudent(estudianteId);
+    gpaList = await gpaViewController.getGPAListByStudent(estudianteId);
 
-    res.json({ estudiante, gpa });
+    console.log("Lista de GPA: ", gpaList);
+
+    res.json({ estudiante, gpa, gpaList});
   } catch (error) {
     console.error(error.message);
   }
