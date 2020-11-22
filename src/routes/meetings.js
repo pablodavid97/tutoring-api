@@ -55,6 +55,7 @@ router.post('/create', async (req, res) => {
       req.body.date,
       req.body.professorId,
       req.body.studentId,
+      req.body.semesterId,
       req.body.email
     );
 

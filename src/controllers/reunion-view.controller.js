@@ -38,7 +38,7 @@ reunionViewController.getReunionesByStudent = async (userId) => {
   }
 };
 
-reunionViewController.getReuniones = async () => {
+reunionViewController.getAllReuniones = async () => {
   try {
     reuniones = await reunionView.findAll();
 
@@ -64,6 +64,20 @@ reunionViewController.getReunionesActivas = async () => {
   }
 };
 
+reunionViewController.getReunionesEliminadas = async () => {
+  try {
+    reunionesEliminadas = await reunionView.findAll({
+      where: {
+        estadoId: 5
+      }
+    });
+
+    return reunionesEliminadas;
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
+
 reunionViewController.getReunionById = async (reunionId) => {
   try {
     reunion = await reunionView.findByPk(reunionId);
@@ -85,5 +99,65 @@ reunionViewController.getLastMeetingId = async () => {
     logger.error(error.message);
   }
 };
+
+// Filtros por semestre
+reunionViewController.getReunionesBySemestre = async (semesterId) => {
+  try {
+    reuniones = await reunionView.findAll({
+      where: {
+        semestreId: semesterId
+      }
+    });
+
+    return reuniones;
+  } catch (error) {
+    logger.error(error.message);
+  }
+}
+
+reunionViewController.getReunionesEliminadasBySemestre = async (semesterId) => {
+  try {
+    reunionesEliminadas = await reunionView.findAll({
+      where: {
+        estadoId: 5,
+        semestreId: semesterId
+      }
+    });
+
+    return reunionesEliminadas;
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
+
+// Filtros por carrera
+reunionViewController.getReunionesByCarrera = async (carreraId) => {
+  try {
+    reuniones = await reunionView.findAll({
+      where: {
+        carreraId: carreraId
+      }
+    });
+
+    return reuniones;
+  } catch (error) {
+    logger.error(error.message);
+  }
+}
+
+reunionViewController.getReunionesEliminadasByCarrera = async (carreraId) => {
+  try {
+    reunionesEliminadas = await reunionView.findAll({
+      where: {
+        estadoId: 5,
+        carreraId: carreraId
+      }
+    });
+
+    return reunionesEliminadas;
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
 
 module.exports = reunionViewController;

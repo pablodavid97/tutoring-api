@@ -25,7 +25,7 @@ module.exports = (sequelize) => {
       comentariosProfesor: {
         type: DataTypes.STRING
       },
-      semestre: {
+      semestreId: {
         type: DataTypes.STRING
       },
       createdOn: {

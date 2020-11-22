@@ -15,6 +15,10 @@ const notificacionViewController = require('../controllers/notificacion-view.con
 const { logger } = require('../utils/logger');
 const imagenController = require('../controllers/imagen.controller');
 const notificacionController = require('../controllers/notificacion.controller');
+const semestreController = require('../controllers/semester.controller');
+const gpaPorSemestreController = require('../controllers/gpa-por-semestre.controller');
+const carreraController = require('../controllers/carrera.controller');
+const { Console } = require('winston/lib/winston/transports');
 
 
 router.get('/home', async (req, res) => {
@@ -25,13 +29,16 @@ router.get('/home', async (req, res) => {
 
   studentInfo = undefined;
   tutor = undefined;
+  gpa = 0;
 
   try {
     rol = await rolController.getRolById(rolId);
     if (isStudent) {
-      studentInfo = await estudianteController.getEstudianteById(usuarioId);
+      studentInfo = await estudianteViewController.getEstudianteById(usuarioId);
 
-      profesorId = studentInfo.ProfesorId;
+      gpa = await gpaPorSemestreController.getAverageGPAByStudent(studentInfo.id);
+
+      profesorId = studentInfo.profesorId;
 
       tutor = await usuarioViewController.getUserById(profesorId);
     }
@@ -39,7 +46,7 @@ router.get('/home', async (req, res) => {
     // Actualiza las reuniones diarias
     await reunionController.setDailyMeetings();
 
-    res.send({ rol, studentInfo, tutor });
+    res.send({ rol, studentInfo, tutor, gpa });
   } catch (error) {
     console.error(error.message);
   }
@@ -79,26 +86,115 @@ router.get('/student', async (req, res) => {
   estudianteId = req.query.userId;
   try {
     estudiante = await estudianteViewController.getEstudianteById(estudianteId);
+    gpa = await gpaPorSemestreController.getAverageGPAByStudent(estudianteId);
 
-    console.log("Estudiante: ", estudiante);
-    res.json({ estudiante });
+    res.json({ estudiante, gpa });
   } catch (error) {
     console.error(error.message);
   }
 });
+
+// value used for filters
+router.get('/semesters', async (req, res) => {
+  try {
+    semestres = await semestreController.getAllSemestres()
+    res.json({semestres})
+  } catch (error) {
+    logger.error(error.message)
+  }
+});
+
+router.get('/carreras', async (req, res) => {
+  try{
+    carreras = await carreraController.getAllCarreras()
+
+    res.json({carreras})
+  } catch (error) {
+    logger.error(error.message)
+  }
+})
 
 router.get('/reports', async (req, res) => {
   try {
-    reuniones = await reunionViewController.getReunionesActivas();
-    gpa = await estudianteController.getAverageGPA();
-    activeUsers = await usuarioController.getActiveUsers();
-    conditionedUsers = await estudianteController.getConditionedStudents();
+    reuniones = await reunionViewController.getAllReuniones();
 
-    res.json({ reuniones, gpa, activeUsers, conditionedUsers });
+    reunionesEliminadas = await reunionViewController.getReunionesEliminadas();
+
+    conditionedUsers = await estudianteController.getConditionedStudents();
+    conditionedUsersNum = conditionedUsers.length
+
+    gpa = await estudianteController.getAverageGPA();
+
+    res.json({ reuniones, reunionesEliminadas, gpa, conditionedUsersNum });
   } catch (error) {
-    console.error(error.message);
+    logger.error(error.message);
   }
 });
+
+// filters applied
+router.get('/reports-by-semester/', async (req, res) => {
+  try {
+    semesterId = req.query.semesterId
+
+    if(semesterId === "0") {
+      reuniones = await reunionViewController.getAllReuniones();
+      
+      reunionesEliminadas = await reunionViewController.getReunionesEliminadas();
+      
+      conditionedUsers = await estudianteController.getConditionedStudents();
+      conditionedUsersNum = conditionedUsers.length
+      
+      gpa = await estudianteController.getAverageGPA();
+    } else {
+      reuniones = await reunionViewController.getReunionesBySemestre(semesterId)
+
+      reunionesEliminadas = await reunionViewController.getReunionesEliminadasBySemestre(semesterId)
+
+      conditionedUsers = await estudianteController.getConditionedStudentsBySemestre(semesterId);
+      conditionedUsersNum = conditionedUsers.length
+
+      gpa = await estudianteController.getAverageGPABySemestre(semesterId)
+    }
+
+    res.json({reuniones, reunionesEliminadas, gpa, conditionedUsersNum})
+
+  } catch (error) {
+    logger.error(error.message)
+  }
+})
+
+router.get('/reports-by-carrera/', async (req, res) => {
+  try {
+    carreraId = req.query.carreraId
+
+    if(carreraId === "0") {
+      reuniones = await reunionViewController.getAllReuniones();
+      
+      reunionesEliminadas = await reunionViewController.getReunionesEliminadas();
+      
+      conditionedUsers = await estudianteController.getConditionedStudents();
+      conditionedUsersNum = conditionedUsers.length
+      
+      gpa = await estudianteController.getAverageGPA();
+    } else {
+      reuniones = await reunionViewController.getReunionesByCarrera(carreraId)
+
+      
+
+      reunionesEliminadas = await reunionViewController.getReunionesEliminadasByCarrera(carreraId)
+
+      conditionedUsers = await estudianteController.getConditionedStudentsByCarrera(carreraId);
+      conditionedUsersNum = conditionedUsers.length
+
+      gpa = await estudianteController.getAverageGPAByCarrera(carreraId)
+    }
+
+    res.json({reuniones, reunionesEliminadas, gpa, conditionedUsersNum})
+
+  } catch (error) {
+    logger.error(error.message)
+  }
+})
 
 router.get('/notifications', async (req, res) => {
   try {
@@ -147,8 +243,6 @@ router.post('/archive-notification', async (req, res) => {
 
 router.post('/viewed-notification', async (req, res) => {
   try {
-    console.log("Data: ", req.body);
-
     await notificacionController.updateNotificationStatus(2, req.body.notificationId)
 
     res.json({status: "ok"})
@@ -199,10 +293,8 @@ router.post('/change-password', async (req, res) => {
 
 router.post('/upload', async (req, res) => {
   try {
-    console.log("Datos Ingresados: ", req.body);
     upload = await imagenController.uploadFile(req.body.file)
 
-    console.log("Message: ", upload);
   } catch (error) {
     logger.error(error.message)
   }
