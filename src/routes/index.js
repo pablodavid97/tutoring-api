@@ -1,4 +1,3 @@
-const { log } = require('winston');
 const express = require('express');
 const router = express.Router();
 const usuarioController = require('../controllers/usuario.controller');
