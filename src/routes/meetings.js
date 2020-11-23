@@ -10,19 +10,17 @@ const reunionController = require('../controllers/reunion.controller');
 const notificacionController = require('../controllers/notificacion.controller');
 
 router.get('/', async (req, res) => {
+  // converts request into json objects
   var requestRoles = req.query.userRoles;
-
-  userRoles = []
-
   var length = requestRoles.length
 
+  userRoles = []
   for(var i = 0; i < length; i++) {
     userRoles.push(JSON.parse(requestRoles[i]))
   }
 
   let isStudent = false
   let isProfessor = false
-
   for(rol of userRoles) {
     if(rol.rolId === 3) {
       isStudent = true
@@ -95,8 +93,13 @@ router.post('/create', async (req, res) => {
 
 router.post('/delete', async (req, res) => {
   try {
+    // deletes previous notifications to avoid conflict
+    await notificacionController.deleteAllNotificationsByMeetingId(req.body.meetingId)
+
+    // changes meeting status
     await reunionController.deleteMeeting(req.body.meetingId, req.body.email);
 
+    // creates new notification for student
     notification = await notificacionController.createNotificacion(
       req.body.meetingId,
       req.body.studentId
@@ -128,6 +131,10 @@ router.post('/edit', async (req, res) => {
       req.body.meetingId
     );
 
+    // deletes previous notifications to avoid conflict
+    await notificacionController.deleteAllNotificationsByMeetingId(req.body.meetingId)
+
+    // creates new notification for student
     notification = await notificacionController.createNotificacion(
       req.body.meetingId,
       req.body.studentId
