@@ -26,6 +26,7 @@ database.sequelize = sequelize;
 
 database.usuario = require('./entities/usuario.model')(database.sequelize);
 database.rol = require('./entities/rol.model')(database.sequelize);
+database.rolesUsuarioView = require('./entities/roles-usuario-view.model')(database.sequelize);
 database.estado = require('./entities/estado.model')(database.sequelize);
 database.decano = require('./entities/decano.model')(database.sequelize);
 database.profesor = require('./entities/profesor.model')(database.sequelize);
@@ -72,10 +73,6 @@ database.gpaView = require('./entities/gpa-view.model')(
 database.imagen = require('./entities/imagen.model')(database.sequelize)
 
 // establece las relaciones entre las entidades
-
-// relacion usuario-rol (muchos a uno)
-database.rol.hasMany(database.usuario, { as: 'usuarios' });
-database.usuario.belongsTo(database.rol, { as: 'rol' });
 
 // relaciones uno a uno
 database.usuario.hasMany(database.decano, { as: 'decano' });

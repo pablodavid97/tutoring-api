@@ -37,12 +37,6 @@ module.exports = (sequelize) => {
         type: DataTypes.TINYINT,
         allowNull: false
       },
-      rolId: {
-          type: DataTypes.INTEGER
-      },
-      rol: {
-          type: DataTypes.STRING
-      },
       imagenId: {
           type: DataTypes.INTEGER
       },

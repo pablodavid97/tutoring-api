@@ -10,8 +10,29 @@ const reunionController = require('../controllers/reunion.controller');
 const notificacionController = require('../controllers/notificacion.controller');
 
 router.get('/', async (req, res) => {
-  isStudent = parseInt(req.query.rolId) === 3;
-  isProfessor = parseInt(req.query.rolId) === 2;
+  var requestRoles = req.query.userRoles;
+
+  userRoles = []
+
+  var length = requestRoles.length
+
+  for(var i = 0; i < length; i++) {
+    userRoles.push(JSON.parse(requestRoles[i]))
+  }
+
+  let isStudent = false
+  let isProfessor = false
+
+  for(rol of userRoles) {
+    if(rol.rolId === 3) {
+      isStudent = true
+    }
+
+    if(rol.rolId === 2) {
+      isProfessor = true
+    }
+  }
+
   studentInfo = {};
   tutor = {};
   students = {};
@@ -37,7 +58,7 @@ router.get('/', async (req, res) => {
       meetings = await reunionViewController.getReunionesByProfessor(
         req.query.userId
       );
-
+      
       lastRowId = await reunionViewController.getLastMeetingId();
     }
 

@@ -18,22 +18,38 @@ const notificacionController = require('../controllers/notificacion.controller')
 const semestreController = require('../controllers/semester.controller');
 const gpaPorSemestreController = require('../controllers/gpa-por-semestre.controller');
 const carreraController = require('../controllers/carrera.controller');
-const gpaViewController = require('../controllers/gpa-view.controller')
+const gpaViewController = require('../controllers/gpa-view.controller');
+const rolesUsuarioViewController = require('../controllers/roles-usuario-view.controller')
 
 router.get('/home', async (req, res) => {
   usuarioId = req.query.userId;
-  rolId = req.query.rolId;
 
-  isStudent = rolId === '3';
+  // converts request into json objects
+  var requestRoles = req.query.userRoles;
+  var length = requestRoles.length
 
+  userRoles = []
+  for(var i = 0; i < length; i++) {
+    userRoles.push(JSON.parse(requestRoles[i]))
+  }
+  
+  // information to be displayed for students
+  isStudent = false;
   studentInfo = undefined;
   tutor = undefined;
   gpa = 0;
   gpaList = {}
 
+
   try {
-    rol = await rolController.getRolById(rolId);
+    for(rol of userRoles) {
+      if(rol.rolId === 3) {
+        isStudent = true
+      }
+    }
+
     if (isStudent) {
+      console.log("Got in!");
       studentInfo = await estudianteViewController.getEstudianteById(usuarioId);
 
       profesorId = studentInfo.profesorId;
@@ -43,31 +59,39 @@ router.get('/home', async (req, res) => {
       gpa = await gpaPorSemestreController.getAverageGPAByStudent(studentInfo.id);
 
       gpaList = await gpaViewController.getGPAListByStudent(studentInfo.id);
-
-      console.log("GPA list: ", gpaList);
     }
 
     // Actualiza las reuniones diarias
     await reunionController.setDailyMeetings();
 
-    res.send({ rol, studentInfo, tutor, gpa, gpaList});
+    res.send({ studentInfo, tutor, gpa, gpaList});
   } catch (error) {
-    console.error(error.message);
+    logger.error(error.message);
   }
 });
 
+router.get('/user-roles', async (req, res) => {
+  try {
+    usuarioId = req.query.userId
+    userRoles = await rolesUsuarioViewController.getUserRoles(usuarioId)
+
+    res.send({userRoles})
+
+  } catch(error){
+    logger.error(error.message)
+  }
+})
+
 router.get('/tutor', async (req, res) => {
-  rolId = req.query.rolId;
   estudianteId = req.query.estudianteId;
 
   try {
-    rol = await rolController.getRolById(rolId);
     studentInfo = await estudianteController.getEstudianteById(estudianteId);
     profesorId = studentInfo.ProfesorId;
 
     tutor = await usuarioViewController.getUserById(profesorId);
 
-    res.json({ rol, studentInfo, tutor });
+    res.json({ studentInfo, tutor });
   } catch (error) {
     console.error(error.message);
   }
@@ -80,7 +104,15 @@ router.get('/students', async (req, res) => {
       profesorId
     );
 
-    res.json(estudiantes);
+    for (student of estudiantes) {
+      console.log("Estudiante: ", student);
+      studentGPA = await gpaPorSemestreController.getAverageGPAByStudent(student.id)
+      student.dataValues.gpa = studentGPA
+    }
+
+    console.log("Students: ", estudiantes);
+
+    res.json({estudiantes});
   } catch (error) {
     console.error(error.message);
   }
@@ -92,8 +124,6 @@ router.get('/student', async (req, res) => {
     estudiante = await estudianteViewController.getEstudianteById(estudianteId);
     gpa = await gpaPorSemestreController.getAverageGPAByStudent(estudianteId);
     gpaList = await gpaViewController.getGPAListByStudent(estudianteId);
-
-    console.log("Lista de GPA: ", gpaList);
 
     res.json({ estudiante, gpa, gpaList});
   } catch (error) {
