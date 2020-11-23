@@ -25,7 +25,7 @@ reunionController.createMeeting = async (
   professorId,
   studentId,
   semestreId,
-  email,
+  email
 ) => {
   try {
     meeting = await reunion.create(

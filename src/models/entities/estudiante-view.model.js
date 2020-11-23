@@ -52,13 +52,13 @@ module.exports = (sequelize) => {
         type: DataTypes.INTEGER
       },
       formatoImagen: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       },
       nombreImagen: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       },
       imagen: {
-          type: DataTypes.BLOB("long")
+        type: DataTypes.BLOB('long')
       }
     },
     {

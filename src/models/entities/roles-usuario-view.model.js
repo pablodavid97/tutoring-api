@@ -9,13 +9,13 @@ module.exports = (sequelize) => {
         primaryKey: true
       },
       rolId: {
-          type: DataTypes.INTEGER
+        type: DataTypes.INTEGER
       },
       rol: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       },
       usuarioId: {
-          type: DataTypes.INTEGER
+        type: DataTypes.INTEGER
       }
     },
     {

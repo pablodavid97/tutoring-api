@@ -152,11 +152,14 @@ usuarioController.setUserProfile = async (
     }
 
     if (imageId) {
-      await usuario.update({imagenId: imageId}, {
-        where: {
-          id: userId
+      await usuario.update(
+        { imagenId: imageId },
+        {
+          where: {
+            id: userId
+          }
         }
-      })
+      );
     }
   } catch (error) {
     logger.error(error.message);
@@ -165,13 +168,17 @@ usuarioController.setUserProfile = async (
 
 usuarioController.setUserProfilePicture = async (image, userId) => {
   try {
-    await usuario.update({fotoPerfil: image}, {
-      where: {
-      id: userId
-    }})
+    await usuario.update(
+      { fotoPerfil: image },
+      {
+        where: {
+          id: userId
+        }
+      }
+    );
   } catch (error) {
-    logger.error(error)
+    logger.error(error);
   }
-}
+};
 
 module.exports = usuarioController;

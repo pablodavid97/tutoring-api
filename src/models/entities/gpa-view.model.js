@@ -9,16 +9,16 @@ module.exports = (sequelize) => {
         primaryKey: true
       },
       semestreId: {
-          type: DataTypes.INTEGER
+        type: DataTypes.INTEGER
       },
       semestre: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       },
       estudianteId: {
-          type: DataTypes.INTEGER
+        type: DataTypes.INTEGER
       },
       gpa: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       }
     },
     {

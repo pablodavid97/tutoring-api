@@ -38,16 +38,16 @@ module.exports = (sequelize) => {
         allowNull: false
       },
       imagenId: {
-          type: DataTypes.INTEGER
+        type: DataTypes.INTEGER
       },
       formatoImagen: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       },
       nombreImagen: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       },
       imagen: {
-          type: DataTypes.BLOB("long")
+        type: DataTypes.BLOB('long')
       }
     },
     {

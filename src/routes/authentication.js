@@ -11,14 +11,14 @@ const reunionController = require('../controllers/reunion.controller');
 const estudianteViewController = require('../controllers/estudiante-view.controller');
 const reunionViewController = require('../controllers/reunion-view.controller');
 const profesorViewController = require('../controllers/profesor-view.controller');
-const fs = require('fs')
+const fs = require('fs');
 
 router.get('/user-by-email', async (req, res) => {
   try {
     user = await usuarioViewController.getUserByEmail(req.query.email);
 
-    if(user) {
-      user.imagen = user.imagen.toString('binary')
+    if (user) {
+      user.imagen = user.imagen.toString('binary');
     }
 
     res.json(user);
@@ -30,9 +30,9 @@ router.get('/user-by-email', async (req, res) => {
 router.get('/user-by-id', async (req, res) => {
   try {
     user = await usuarioViewController.getUserById(req.query.userId);
-    
-    if(user) {
-      user.imagen = user.imagen.toString('binary')
+
+    if (user) {
+      user.imagen = user.imagen.toString('binary');
     }
 
     res.json(user);

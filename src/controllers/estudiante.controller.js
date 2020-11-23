@@ -2,7 +2,7 @@ const { logger } = require('../utils/logger');
 const database = require('../models/connection-manager');
 const estudiante = database.estudiante;
 const estudianteController = {};
-const gpaPorSemestreController = require('./gpa-por-semestre.controller')
+const gpaPorSemestreController = require('./gpa-por-semestre.controller');
 const { Sequelize } = require('sequelize');
 const { parse } = require('path');
 
@@ -29,19 +29,20 @@ estudianteController.getAllStudents = async () => {
 estudianteController.getAverageGPA = async () => {
   try {
     // placeholder
-    students = await estudianteController.getAllStudents()
-    studentNum = students.length
+    students = await estudianteController.getAllStudents();
+    studentNum = students.length;
 
-    globalGPA = 0
-    for(var i = 0; i < studentNum; i++) {
-      gpa = await gpaPorSemestreController.getAverageGPAByStudent(students[i].id)
-      globalGPA += gpa
+    globalGPA = 0;
+    for (var i = 0; i < studentNum; i++) {
+      gpa = await gpaPorSemestreController.getAverageGPAByStudent(
+        students[i].id
+      );
+      globalGPA += gpa;
     }
 
-    averageGPA = globalGPA / studentNum
+    averageGPA = globalGPA / studentNum;
 
-    return averageGPA.toFixed(2)
-
+    return averageGPA.toFixed(2);
   } catch (error) {
     logger.error(error.message);
   }
@@ -51,14 +52,16 @@ estudianteController.getConditionedStudents = async () => {
   try {
     // placeholder
     students = await estudiante.findAll();
-    studentsNum = students.length
+    studentsNum = students.length;
 
-    conditionedUsers = []
-    for(var i = 0; i < studentsNum; i++) {
-      gpa = await gpaPorSemestreController.getAverageGPAByStudent(students[i].id)
+    conditionedUsers = [];
+    for (var i = 0; i < studentsNum; i++) {
+      gpa = await gpaPorSemestreController.getAverageGPAByStudent(
+        students[i].id
+      );
 
-      if(gpa < 2.5) {
-        conditionedUsers.push(students[i])
+      if (gpa < 2.5) {
+        conditionedUsers.push(students[i]);
       }
     }
 
@@ -71,42 +74,47 @@ estudianteController.getConditionedStudents = async () => {
 // Filtros por semestre
 estudianteController.getAverageGPABySemestre = async (semesterId) => {
   try {
-    students = await estudianteController.getAllStudents()
-    studentNum = students.length
+    students = await estudianteController.getAllStudents();
+    studentNum = students.length;
 
-    globalGPA = 0
-    for(var i = 0; i < studentNum; i++) {
-      gpa = await gpaPorSemestreController.getSemesterGPAByStudent(students[i].id, semesterId)
+    globalGPA = 0;
+    for (var i = 0; i < studentNum; i++) {
+      gpa = await gpaPorSemestreController.getSemesterGPAByStudent(
+        students[i].id,
+        semesterId
+      );
 
-      if(gpa){
-        globalGPA += gpa
+      if (gpa) {
+        globalGPA += gpa;
       }
     }
 
-    averageGPA = 0 
+    averageGPA = 0;
 
-    if(globalGPA > 0) {
-      averageGPA = (globalGPA / studentNum).toFixed(2)
+    if (globalGPA > 0) {
+      averageGPA = (globalGPA / studentNum).toFixed(2);
     }
 
-    return averageGPA 
-
+    return averageGPA;
   } catch (error) {
     logger.error(error.message);
   }
-}
+};
 
 estudianteController.getConditionedStudentsBySemestre = async (semesterId) => {
   try {
     students = await estudiante.findAll();
-    studentsNum = students.length
+    studentsNum = students.length;
 
-    conditionedUsers = []
-    for(var i = 0; i < studentsNum; i++) {
-      gpa = await gpaPorSemestreController.getSemesterGPAByStudent(students[i].id, semesterId)
+    conditionedUsers = [];
+    for (var i = 0; i < studentsNum; i++) {
+      gpa = await gpaPorSemestreController.getSemesterGPAByStudent(
+        students[i].id,
+        semesterId
+      );
 
-      if(gpa < 2.5) {
-        conditionedUsers.push(students[i])
+      if (gpa < 2.5) {
+        conditionedUsers.push(students[i]);
       }
     }
 
@@ -115,48 +123,51 @@ estudianteController.getConditionedStudentsBySemestre = async (semesterId) => {
     logger.error(error.message);
   }
 };
- 
+
 // Filtros por carrera
 estudianteController.getAverageGPAByCarrera = async (carreraId) => {
   try {
-    students = await estudianteController.getAllStudents()
-    studentNum = students.length
+    students = await estudianteController.getAllStudents();
+    studentNum = students.length;
 
-    globalGPA = 0
-    studentCounter = 0
-    for(var i = 0; i < studentNum; i++) {
-      gpa = await gpaPorSemestreController.getAverageGPAByStudent(students[i].id)
+    globalGPA = 0;
+    studentCounter = 0;
+    for (var i = 0; i < studentNum; i++) {
+      gpa = await gpaPorSemestreController.getAverageGPAByStudent(
+        students[i].id
+      );
 
-      if(students[i].carreraId.toString() === carreraId){
-        globalGPA += gpa
-        studentCounter += 1
+      if (students[i].carreraId.toString() === carreraId) {
+        globalGPA += gpa;
+        studentCounter += 1;
       }
     }
 
-    averageGPA = 0 
+    averageGPA = 0;
 
-    if(globalGPA > 0 && studentCounter > 0) {
-      averageGPA = (globalGPA / studentCounter).toFixed(2)
+    if (globalGPA > 0 && studentCounter > 0) {
+      averageGPA = (globalGPA / studentCounter).toFixed(2);
     }
 
-    return averageGPA 
-
+    return averageGPA;
   } catch (error) {
     logger.error(error.message);
   }
-}
+};
 
 estudianteController.getConditionedStudentsByCarrera = async (carreraId) => {
   try {
     students = await estudiante.findAll();
-    studentsNum = students.length
+    studentsNum = students.length;
 
-    conditionedUsers = []
-    for(var i = 0; i < studentsNum; i++) {
-      gpa = await gpaPorSemestreController.getAverageGPAByStudent(students[i].id)
+    conditionedUsers = [];
+    for (var i = 0; i < studentsNum; i++) {
+      gpa = await gpaPorSemestreController.getAverageGPAByStudent(
+        students[i].id
+      );
 
-      if(gpa < 2.5 && students[i].carreraId.toString() === carreraId) {
-        conditionedUsers.push(students[i])
+      if (gpa < 2.5 && students[i].carreraId.toString() === carreraId) {
+        conditionedUsers.push(students[i]);
       }
     }
 

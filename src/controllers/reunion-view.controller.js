@@ -74,9 +74,9 @@ reunionViewController.getReunionesEliminadas = async () => {
 
     return reunionesEliminadas;
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
+};
 
 reunionViewController.getReunionById = async (reunionId) => {
   try {
@@ -94,12 +94,12 @@ reunionViewController.getLastMeetingId = async () => {
       order: [['id', 'DESC']]
     });
 
-    console.log("Last meeting: ", lastMeeting);
+    console.log('Last meeting: ', lastMeeting);
 
-    lastMeetingId = 0
+    lastMeetingId = 0;
 
-    if(lastMeeting != null) {
-      lastMeetingId = lastMeeting.id
+    if (lastMeeting != null) {
+      lastMeetingId = lastMeeting.id;
     }
 
     return lastMeetingId;
@@ -121,7 +121,7 @@ reunionViewController.getReunionesBySemestre = async (semesterId) => {
   } catch (error) {
     logger.error(error.message);
   }
-}
+};
 
 reunionViewController.getReunionesEliminadasBySemestre = async (semesterId) => {
   try {
@@ -134,9 +134,9 @@ reunionViewController.getReunionesEliminadasBySemestre = async (semesterId) => {
 
     return reunionesEliminadas;
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
+};
 
 // Filtros por carrera
 reunionViewController.getReunionesByCarrera = async (carreraId) => {
@@ -151,7 +151,7 @@ reunionViewController.getReunionesByCarrera = async (carreraId) => {
   } catch (error) {
     logger.error(error.message);
   }
-}
+};
 
 reunionViewController.getReunionesEliminadasByCarrera = async (carreraId) => {
   try {
@@ -164,8 +164,8 @@ reunionViewController.getReunionesEliminadasByCarrera = async (carreraId) => {
 
     return reunionesEliminadas;
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
+};
 
 module.exports = reunionViewController;
