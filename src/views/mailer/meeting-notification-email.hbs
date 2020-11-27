@@ -1,0 +1,73 @@
+<span class="preheader">{{preHeader}}</span>
+    <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+      <tr>
+        <td align="center">
+          <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+            <!-- Email Header -->
+            <tr>
+              <td class="email-masthead">
+                <a href="/" class="f-fallback email-masthead_name email-link">
+                USFQ Tutorías
+              </a>
+              </td>
+            </tr>
+            <!-- Email Body -->
+            <tr>
+              <td class="email-body" width="100%" cellpadding="0" cellspacing="0">
+                <table class="email-body_inner" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+                  <!-- Body content -->
+                  <tr>
+                    <td class="content-cell">
+                      <div class="f-fallback">
+                        <h1>Hola {{user.nombres}},</h1>
+                        <p>{{messageStart}}</p>
+
+                        <h2>Detalles</h2>
+                        <!-- Meeting details section--> 
+                        <table class="meeting-details">
+                            <tr>
+                                <label class="meetingLabel">Reunión No: </label> <span id="meetingId">{{meeting.id}}</span><br>
+                                <label class="meetingLabel">Tema: </label> <span id="meetingId">{{meeting.tema}}</span><br>
+                                <label class="meetingLabel">Fecha:</label> <span id="meetingDate">{{meeting.fecha}}</span><br>
+                                <label class="meetingLabel" for="meetingProfessor">Profesor:</label>
+                                <span id="meetingProfessor">{{professor.nombres}} {{professor.apellidos}}</span><br>
+                                <label class="meetingLabel" for="meetingStudent">Estudiante:</label>
+                                <span id="meetingStudent">{{student.nombres}} {{student.apellidos}}</span><br>
+
+                                <label class="meetingLabel">Descripción:</label>
+                                <p id="meetingDescription">
+                                    {{meeting.descripcion}}
+                                </p>
+                            </tr>
+                        
+                        </table>
+                        <p>{{messageEnding}}</p>
+
+                        <p>Atentamente,
+                        <br>El Equipo de USFQ Tutorías</p>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <table class="email-footer" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+                  <tr>
+                    <td class="content-cell" align="center">
+                      <p class="f-fallback sub align-center">&copy; 2020 USFQ Tutorías. Todos los derechos reservados.</p>
+                      <p class="f-fallback sub align-center">
+                        Universidad San Francisco de Quito (USFQ)
+                        <br>1234 Street Rd.
+                        <br>Suite 1234
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
