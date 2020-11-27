@@ -48,7 +48,6 @@ router.get('/home', async (req, res) => {
     }
 
     if (isStudent) {
-      console.log("Got in!");
       studentInfo = await estudianteViewController.getEstudianteById(usuarioId);
 
       profesorId = studentInfo.profesorId;
@@ -104,12 +103,9 @@ router.get('/students', async (req, res) => {
     );
 
     for (student of estudiantes) {
-      console.log("Estudiante: ", student);
       studentGPA = await gpaPorSemestreController.getAverageGPAByStudent(student.id)
       student.dataValues.gpa = studentGPA
     }
-
-    console.log("Students: ", estudiantes);
 
     res.json({estudiantes});
   } catch (error) {
@@ -214,8 +210,6 @@ router.get('/reports-by-carrera/', async (req, res) => {
       gpa = await estudianteController.getAverageGPA();
     } else {
       reuniones = await reunionViewController.getReunionesByCarrera(carreraId)
-
-      
 
       reunionesEliminadas = await reunionViewController.getReunionesEliminadasByCarrera(carreraId)
 
@@ -323,15 +317,6 @@ router.post('/change-password', async (req, res) => {
 
     res.json(usuario);
   } catch(error) {
-    logger.error(error.message)
-  }
-})
-
-router.post('/upload', async (req, res) => {
-  try {
-    upload = await imagenController.uploadFile(req.body.file)
-
-  } catch (error) {
     logger.error(error.message)
   }
 })

@@ -49,6 +49,9 @@ module.exports = (sequelize) => {
       estado: {
         type: DataTypes.STRING
       },
+      emailNotificacion: {
+        type: DataTypes.TINYINT
+      },
       semestreId: {
         type: DataTypes.INTEGER
       },
