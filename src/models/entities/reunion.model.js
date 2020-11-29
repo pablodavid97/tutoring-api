@@ -25,8 +25,8 @@ module.exports = (sequelize) => {
       comentariosProfesor: {
         type: DataTypes.STRING
       },
-      semestreId: {
-        type: DataTypes.STRING
+      emailNotificacion: {
+        type: DataTypes.TINYINT
       },
       createdOn: {
         type: DataTypes.DATE

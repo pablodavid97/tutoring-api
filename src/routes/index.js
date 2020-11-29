@@ -47,7 +47,6 @@ router.get('/home', async (req, res) => {
     }
 
     if (isStudent) {
-      console.log('Got in!');
       studentInfo = await estudianteViewController.getEstudianteById(usuarioId);
 
       profesorId = studentInfo.profesorId;
@@ -104,16 +103,11 @@ router.get('/students', async (req, res) => {
     );
 
     for (student of estudiantes) {
-      console.log('Estudiante: ', student);
-      studentGPA = await gpaPorSemestreController.getAverageGPAByStudent(
-        student.id
-      );
-      student.dataValues.gpa = studentGPA;
+      studentGPA = await gpaPorSemestreController.getAverageGPAByStudent(student.id)
+      student.dataValues.gpa = studentGPA
     }
 
-    console.log('Students: ', estudiantes);
-
-    res.json({ estudiantes });
+    res.json({estudiantes});
   } catch (error) {
     console.error(error.message);
   }
@@ -220,11 +214,9 @@ router.get('/reports-by-carrera/', async (req, res) => {
 
       gpa = await estudianteController.getAverageGPA();
     } else {
-      reuniones = await reunionViewController.getReunionesByCarrera(carreraId);
+      reuniones = await reunionViewController.getReunionesByCarrera(carreraId)
 
-      reunionesEliminadas = await reunionViewController.getReunionesEliminadasByCarrera(
-        carreraId
-      );
+      reunionesEliminadas = await reunionViewController.getReunionesEliminadasByCarrera(carreraId)
 
       conditionedUsers = await estudianteController.getConditionedStudentsByCarrera(
         carreraId
@@ -349,15 +341,15 @@ router.post('/change-password', async (req, res) => {
   }
 });
 
-router.post('/upload', async (req, res) => {
+router.get('/current_semester', async (req, res) => {
   try {
-    upload = await imagenController.uploadFile(req.body.file);
+    semestre = await semestreController.getCurrentSemester();
 
-    res.json({ status: 'ok' });
+    res.json({semestre});
   } catch (error) {
     logger.error(error.message);
   }
-});
+})
 
 //Decano
 router.get('/decanos', async (req, res) => {

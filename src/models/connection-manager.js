@@ -123,6 +123,10 @@ database.estudiante.belongsTo(database.carrera, { as: 'carrera' });
 database.carrera.hasMany(database.profesor, { as: 'profesor' });
 database.profesor.belongsTo(database.carrera, { as: 'carrera' });
 
+// relacion reunion-semestre
+database.semestre.hasMany(database.reunion, {as: "reunion"})
+database.reunion.belongsTo(database.semestre, {as: "semestre"})
+
 // relacion muchos a muchos estudiante-semestre
 database.estudiante.hasMany(database.gpaPorSemestre, { as: 'gpaPorSemestre' });
 database.gpaPorSemestre.belongsTo(database.estudiante, { as: 'estudiante' });

@@ -39,9 +39,11 @@ router.get('/', async (req, res) => {
       user.dataValues.rolesText = txt;
     }
 
+    semesters = await semestreController.getAllSemestres()
+
     // console.log("Users: ", users);
 
-    res.json({ users });
+    res.json({ users, semesters });
   } catch (error) {
     logger.error(error.message);
   }
@@ -56,5 +58,19 @@ router.post('/upload', async (req, res) => {
     logger.error(error.message);
   }
 });
+
+router.post('/current-semester', async (req, res) => {
+  try {
+    semesterId = req.body.semesterId
+
+    console.log("Semestre id: ", semesterId);
+
+    await semestreController.setCurrentSemester(semesterId)
+  
+    res.json({ status: 'ok' });
+  } catch (error) {
+    logger.error(error.message);
+  }
+})
 
 module.exports = router;

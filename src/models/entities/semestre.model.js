@@ -12,6 +12,9 @@ module.exports = (sequelize) => {
       semestre: {
         type: DataTypes.STRING,
         allowNull: false
+      },
+      currentSemester: {
+        type: DataTypes.TINYINT
       }
     },
     {

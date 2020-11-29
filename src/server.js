@@ -8,6 +8,7 @@ const database = require('./models/connection-manager');
 const path = require('path');
 const usuarioController = require('./controllers/usuario.controller');
 
+
 require('dotenv').config();
 const hostname = '127.0.0.1';
 const port = process.env.API_SERVER_PORT || 3000;
