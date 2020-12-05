@@ -5,6 +5,7 @@ const estudianteController = {};
 const gpaPorSemestreController = require('./gpa-por-semestre.controller');
 const { Sequelize } = require('sequelize');
 const { parse } = require('path');
+const { profesor } = require('../models/connection-manager');
 
 estudianteController.getEstudianteById = async (estudianteId) => {
   try {
@@ -176,5 +177,19 @@ estudianteController.getConditionedStudentsByCarrera = async (carreraId) => {
     logger.error(error.message);
   }
 };
+
+estudianteController.insertEstudiante = async (userId, estudianteObject, tutorId, carrera) => {
+  await estudiante.create({
+    id: userId,
+    status: estudianteObject.status,
+    periodoDeAdmision: estudianteObject.periodoDeAdmision,
+    tipoDeAdmision: estudianteObject.tipoDeAdmision,
+    profesorId: tutorId,
+    usuarioId: userId,
+    carreraId: carrera
+  }, {
+    fields: ["id", "status", "periodoDeAdmision", "tipoDeAdmision", "profesorId", "usuarioId", "carreraId"]
+  })
+}
 
 module.exports = estudianteController;

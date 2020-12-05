@@ -45,4 +45,18 @@ gpaPorSemestreController.getSemesterGPAByStudent = async (
   }
 };
 
+gpaPorSemestreController.insertGPA = async (semesterId, studentId, gpaValue) => {
+  try {
+    await gpaPorSemestre.create({
+      semestreId: semesterId,
+      estudianteId: studentId,
+      gpa: gpaValue
+    }, {
+      fields: ["semestreId", "estudianteId", "gpa"]
+    })
+  } catch (error) {
+    logger.error(error.message);
+  }
+}
+
 module.exports = gpaPorSemestreController;

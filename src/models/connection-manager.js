@@ -29,6 +29,9 @@ database.rol = require('./entities/rol.model')(database.sequelize);
 database.rolesUsuarioView = require('./entities/roles-usuario-view.model')(
   database.sequelize
 );
+database.rolesUsuario = require('./entities/roles-usuario.model')(
+  database.sequelize
+);
 database.estado = require('./entities/estado.model')(database.sequelize);
 database.decano = require('./entities/decano.model')(database.sequelize);
 database.profesor = require('./entities/profesor.model')(database.sequelize);
@@ -81,6 +84,13 @@ database.estudiante.belongsTo(database.usuario, { as: 'usuario' });
 database.imagen.hasMany(database.usuario, { as: 'usuario' });
 database.usuario.belongsTo(database.imagen, { as: 'imagen' });
 
+// relaciones muchos a muchos rol-usuario
+database.usuario.hasMany(database.rolesUsuario, { as: 'roles' });
+database.rolesUsuario.belongsTo(database.usuario, { as: 'usuario' });
+
+database.rol.hasMany(database.rolesUsuario, { as: 'roles' });
+database.rolesUsuario.belongsTo(database.rol, { as: 'rol' });
+
 // relacion profesor-estudiante
 database.profesor.hasMany(database.estudiante, { as: 'estudiante' });
 database.estudiante.belongsTo(database.profesor, { as: 'profesor' });
@@ -124,8 +134,8 @@ database.carrera.hasMany(database.profesor, { as: 'profesor' });
 database.profesor.belongsTo(database.carrera, { as: 'carrera' });
 
 // relacion reunion-semestre
-database.semestre.hasMany(database.reunion, {as: "reunion"})
-database.reunion.belongsTo(database.semestre, {as: "semestre"})
+database.semestre.hasMany(database.reunion, { as: 'reunion' });
+database.reunion.belongsTo(database.semestre, { as: 'semestre' });
 
 // relacion muchos a muchos estudiante-semestre
 database.estudiante.hasMany(database.gpaPorSemestre, { as: 'gpaPorSemestre' });

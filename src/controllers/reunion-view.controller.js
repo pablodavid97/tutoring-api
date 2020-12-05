@@ -94,7 +94,7 @@ reunionViewController.getLastMeetingId = async () => {
       order: [['id', 'DESC']]
     });
 
-    lastMeetingId = 0
+    lastMeetingId = 0;
 
     if (lastMeeting != null) {
       lastMeetingId = lastMeeting.id;

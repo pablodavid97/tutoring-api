@@ -12,14 +12,12 @@ const estudianteViewController = require('../controllers/estudiante-view.control
 const reunionViewController = require('../controllers/reunion-view.controller');
 const profesorViewController = require('../controllers/profesor-view.controller');
 const fs = require('fs');
+const imagenController = require('../controllers/imagen.controller');
 
 router.get('/user-by-email', async (req, res) => {
   try {
     user = await usuarioViewController.getUserByEmail(req.query.email);
-
-    if (user) {
-      user.imagen = user.imagen.toString('binary');
-    }
+    console.log("user: ", user);
 
     res.json(user);
   } catch (error) {
@@ -31,15 +29,27 @@ router.get('/user-by-id', async (req, res) => {
   try {
     user = await usuarioViewController.getUserById(req.query.userId);
 
-    if (user) {
-      user.imagen = user.imagen.toString('binary');
-    }
-
     res.json(user);
   } catch (error) {
     logger.error(error.message);
   }
 });
+
+router.get('/image-by-id', async (req, res) => {
+  try {
+    let imageId = req.query.imageId
+
+    console.log("Imagen Id: ", imageId)
+    
+    image = await imagenController.getImageById(imageId);
+
+    image.datos = image.datos.toString('binary')
+
+    res.json(image)
+  } catch (error) {
+    logger.error(error.message)
+  }
+})
 
 router.post('/create-password', async (req, res) => {
   try {

@@ -20,11 +20,11 @@ semestreController.getCurrentSemester = async () => {
       }
     });
 
-    return semester[0]
-  } catch(error) {
-    logger.error(error.message)
+    return semester[0];
+  } catch (error) {
+    logger.error(error.message);
   }
-}
+};
 
 semestreController.setCurrentSemester = async (semesterId) => {
   try {
@@ -36,20 +36,39 @@ semestreController.setCurrentSemester = async (semesterId) => {
           currentSemester: 1
         }
       }
-    )
+    );
 
     // sets new current semester
     await semestre.update(
-      { currentSemester: 1},
+      { currentSemester: 1 },
       {
         where: {
           id: semesterId
         }
       }
-    )
+    );
+  } catch (error) {
+    logger.error(error.message);
+  }
+};
 
+semestreController.insertSemestre = async (id, semester, currentSemester) => {
+  await semestre.create({
+    id: id,
+    semestre: semester,
+    currentSemester: currentSemester
+  }, {
+    fields: ["id", "semestre", "currentSemester"]
+  })
+}
 
-  } catch(error) {
+// Truncates table
+semestreController.clearTable = async () => {
+  try {
+    await semestre.destroy({
+      where: {}
+    })
+  } catch (error) {
     logger.error(error.message)
   }
 }

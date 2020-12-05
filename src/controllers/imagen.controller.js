@@ -60,4 +60,18 @@ imagenController.getLastImageId = async () => {
   }
 };
 
+imagenController.getImageById = async (imageId) => {
+  try {
+    image = await imagen.findAll({
+      where: {
+        id: imageId
+      }
+    });
+
+    return image[0]
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
+
 module.exports = imagenController;

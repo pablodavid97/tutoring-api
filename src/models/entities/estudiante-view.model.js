@@ -50,15 +50,6 @@ module.exports = (sequelize) => {
       },
       imagenId: {
         type: DataTypes.INTEGER
-      },
-      formatoImagen: {
-        type: DataTypes.STRING
-      },
-      nombreImagen: {
-        type: DataTypes.STRING
-      },
-      imagen: {
-        type: DataTypes.BLOB('long')
       }
     },
     {

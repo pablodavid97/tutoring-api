@@ -1,5 +1,6 @@
 const { logger } = require('../utils/logger');
 const database = require('../models/connection-manager');
+const { Sequelize } = require('sequelize');
 const usuario = database.usuario;
 const rol = database.rol;
 const usuarioController = {};
@@ -180,5 +181,38 @@ usuarioController.setUserProfilePicture = async (image, userId) => {
     logger.error(error);
   }
 };
+
+usuarioController.insertUser = async (userId, userObject, firstTimeLogin) => {
+  try {
+    await usuario.create({
+      id: userId,
+      correoInstitucional: userObject.correoInstitucional,
+      codigo: userObject.codigo,
+      nombres: userObject.nombres,
+      apellidos: userObject.apellidos,
+      correoPersonal: userObject.correoPersonal,
+      telefono: userObject.telefono,
+      firstTimeLogin: firstTimeLogin
+    }, {
+      fields: ["id", "correoInstitucional", "codigo", "nombres", "apellidos", "correoPersonal", "telefono", "firstTimeLogin"]
+    })
+  } catch (error) {
+    logger.error(error);
+  }
+}
+
+usuarioController.clearTable = async () => {
+  try {
+    await usuario.destroy({
+      where: {
+        // id: {
+        //   [Sequelize.Op.not]: 1
+        // }
+      }
+    })
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
 
 module.exports = usuarioController;
