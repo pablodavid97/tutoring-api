@@ -69,6 +69,7 @@ router.get('/', async (req, res) => {
 
 router.post('/create', async (req, res) => {
   try {
+    console.log("Datos ingresados: ", req.body);
     meeting = await reunionController.createMeeting(
       req.body.subject,
       req.body.description,
@@ -183,6 +184,9 @@ router.post('/accept', async (req, res) => {
     );
 
     meeting = await reunionViewController.getReunionById(meetingId);
+
+    // Actualiza las reuniones diarias
+    await reunionController.setDailyMeetings();
 
     res.json({ meeting });
   } catch (error) {
