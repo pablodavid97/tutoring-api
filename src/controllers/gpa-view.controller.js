@@ -5,17 +5,17 @@ const gpaView = database.gpaView;
 const gpaViewController = {};
 
 gpaViewController.getGPAListByStudent = async (studentId) => {
-    try {
-        gpaList = await gpaView.findAll({
-            where: {
-                estudianteId: studentId
-            }
-        })
+  try {
+    gpaList = await gpaView.findAll({
+      where: {
+        estudianteId: studentId
+      }
+    });
 
-        return gpaList
-    } catch (error) {
-        logger.error(error.message)
-    }
-}
+    return gpaList;
+  } catch (error) {
+    logger.error(error.message);
+  }
+};
 
-module.exports = gpaViewController
+module.exports = gpaViewController;

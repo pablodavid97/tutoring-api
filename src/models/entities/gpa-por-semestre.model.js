@@ -9,7 +9,7 @@ module.exports = (sequelize) => {
         primaryKey: true
       },
       gpa: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       }
     },
     {

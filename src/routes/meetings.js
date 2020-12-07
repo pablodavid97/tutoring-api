@@ -13,22 +13,22 @@ const { reunion } = require('../models/connection-manager');
 router.get('/', async (req, res) => {
   // converts request into json objects
   var requestRoles = req.query.userRoles;
-  var length = requestRoles.length
+  var length = requestRoles.length;
 
-  userRoles = []
-  for(var i = 0; i < length; i++) {
-    userRoles.push(JSON.parse(requestRoles[i]))
+  userRoles = [];
+  for (var i = 0; i < length; i++) {
+    userRoles.push(JSON.parse(requestRoles[i]));
   }
 
-  let isStudent = false
-  let isProfessor = false
-  for(rol of userRoles) {
-    if(rol.rolId === 3) {
-      isStudent = true
+  let isStudent = false;
+  let isProfessor = false;
+  for (rol of userRoles) {
+    if (rol.rolId === 3) {
+      isStudent = true;
     }
 
-    if(rol.rolId === 2) {
-      isProfessor = true
+    if (rol.rolId === 2) {
+      isProfessor = true;
     }
   }
 
@@ -57,7 +57,7 @@ router.get('/', async (req, res) => {
       meetings = await reunionViewController.getReunionesByProfessor(
         req.query.userId
       );
-      
+
       lastRowId = await reunionViewController.getLastMeetingId();
     }
 
@@ -81,7 +81,7 @@ router.post('/create', async (req, res) => {
     );
 
     meetingId = await reunionViewController.getLastMeetingId();
-    meeting.id = meetingId
+    meeting.id = meetingId;
 
     notification = await notificacionController.createNotificacion(
       meetingId,
@@ -97,7 +97,9 @@ router.post('/create', async (req, res) => {
 router.post('/delete', async (req, res) => {
   try {
     // deletes previous notifications to avoid conflict
-    await notificacionController.deleteAllNotificationsByMeetingId(req.body.meetingId)
+    await notificacionController.deleteAllNotificationsByMeetingId(
+      req.body.meetingId
+    );
 
     // changes meeting status
     await reunionController.deleteMeeting(req.body.meetingId, req.body.email);
@@ -108,9 +110,9 @@ router.post('/delete', async (req, res) => {
       req.body.studentId
     );
 
-    meeting = await reunionViewController.getReunionById(req.body.meetingId)
+    meeting = await reunionViewController.getReunionById(req.body.meetingId);
 
-    res.json({meeting});
+    res.json({ meeting });
   } catch (error) {
     logger.error(error.message);
   }
@@ -137,7 +139,9 @@ router.post('/edit', async (req, res) => {
     );
 
     // deletes previous notifications to avoid conflict
-    await notificacionController.deleteAllNotificationsByMeetingId(req.body.meetingId)
+    await notificacionController.deleteAllNotificationsByMeetingId(
+      req.body.meetingId
+    );
 
     // creates new notification for student
     notification = await notificacionController.createNotificacion(
@@ -145,7 +149,7 @@ router.post('/edit', async (req, res) => {
       req.body.studentId
     );
 
-    meeting = await reunionViewController.getReunionById(req.body.meetingId)
+    meeting = await reunionViewController.getReunionById(req.body.meetingId);
 
     res.json({ meeting });
   } catch (error) {
@@ -178,7 +182,7 @@ router.post('/accept', async (req, res) => {
       profesorId
     );
 
-    meeting = await reunionViewController.getReunionById(meetingId)
+    meeting = await reunionViewController.getReunionById(meetingId);
 
     res.json({ meeting });
   } catch (error) {
@@ -207,7 +211,7 @@ router.post('/reject', async (req, res) => {
       profesorId
     );
 
-    meeting = await reunionViewController.getReunionById(meetingId)
+    meeting = await reunionViewController.getReunionById(meetingId);
 
     res.json({ meeting });
   } catch (error) {
@@ -228,8 +232,6 @@ router.post('/done', async (req, res) => {
 
     if (isStudent) {
       user = await usuarioViewController.getUserById(meeting.estudianteId);
-
-      console.log("Break");
 
       await reunionController.editMeetingStudentComment(
         meetingId,
@@ -269,7 +271,7 @@ router.post('/done', async (req, res) => {
       await notificacionController.createNotificacion(meetingId, student.id);
     }
 
-    res.json({meeting});
+    res.json({ meeting });
   } catch (error) {
     logger.error(error.message);
   }
@@ -294,9 +296,9 @@ router.post('/reschedule', async (req, res) => {
       req.body.studentId
     );
 
-    meeting = await reunionViewController.getReunionById(req.body.meetingId)
+    meeting = await reunionViewController.getReunionById(req.body.meetingId);
 
-    res.json({meeting});
+    res.json({ meeting });
   } catch (error) {
     logger.error(error.message);
   }

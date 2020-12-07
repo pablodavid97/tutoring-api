@@ -6,7 +6,7 @@ const reunion = database.reunion;
 const reunionController = {};
 const notificationController = require('./notificacion.controller');
 const notificacionController = require('./notificacion.controller');
-const axiosInstance = require('../http-client')
+const axiosInstance = require('../http-client');
 
 // SELECT *
 reunionController.find = async () => {
@@ -241,20 +241,40 @@ reunionController.setDailyMeetings = async () => {
           );
 
           // sends email notifications if enabled
-          if(meetings[i].emailNotificacion) {
-            studentRequest = await axiosInstance.get('/user-by-id', {params: {userId: meetings[i].estudianteId}})
-            student = studentRequest.data
-            professorRequest = await axiosInstance.get('/user-by-id', {params: {userId: meetings[i].profesorId}})
-            professor = professorRequest.data
+          if (meetings[i].emailNotificacion) {
+            studentRequest = await axiosInstance.get('/user-by-id', {
+              params: { userId: meetings[i].estudianteId }
+            });
+            student = studentRequest.data;
+            professorRequest = await axiosInstance.get('/user-by-id', {
+              params: { userId: meetings[i].profesorId }
+            });
+            professor = professorRequest.data;
 
-            meetings[i].estadoId = 6
+            meetings[i].estadoId = 6;
 
             // sends notification to professor and student
-            emailRequest1 = await axiosInstance.post('/send-meeting-notification', {student: student, professor: professor, meeting: meetings[i], isProfessor: true})
-            emailJSON1 = emailRequest1.data
+            emailRequest1 = await axiosInstance.post(
+              '/send-meeting-notification',
+              {
+                student: student,
+                professor: professor,
+                meeting: meetings[i],
+                isProfessor: true
+              }
+            );
+            emailJSON1 = emailRequest1.data;
 
-            emailRequest2 = await axiosInstance.post('/send-meeting-notification', {student: student, professor: professor, meeting: meetings[i], isStudent: true})
-            emailJSON2 = emailRequest2.data
+            emailRequest2 = await axiosInstance.post(
+              '/send-meeting-notification',
+              {
+                student: student,
+                professor: professor,
+                meeting: meetings[i],
+                isStudent: true
+              }
+            );
+            emailJSON2 = emailRequest2.data;
           }
         }
       }

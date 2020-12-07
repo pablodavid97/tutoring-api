@@ -8,7 +8,6 @@ const database = require('./models/connection-manager');
 const path = require('path');
 const usuarioController = require('./controllers/usuario.controller');
 
-
 require('dotenv').config();
 const hostname = '127.0.0.1';
 const port = process.env.API_SERVER_PORT || 3000;
@@ -29,8 +28,8 @@ app.engine(
 
 // MIDDLEWARES
 app.use(expressLogger);
-app.use(express.urlencoded({ extended: true, limit: '50mb'}));
-app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+app.use(express.json({ limit: '50mb' }));
 
 const errorHandler = (err, req, res, next) => {
   if (environment === 'dev') {
@@ -43,13 +42,14 @@ const errorHandler = (err, req, res, next) => {
 app.use(errorHandler);
 
 global.srcDir = path.resolve(__dirname);
-global.appRoot = path.resolve(__dirname, "../");
+global.appRoot = path.resolve(__dirname, '../');
 
 // Routes
 app.use(require('./routes/index'));
 app.use(require('./routes/authentication'));
 app.use('/meetings', require('./routes/meetings'));
 app.use(require('./routes/mailer'));
+app.use('/admin', require('./routes/admin'));
 
 // DB Connection
 database

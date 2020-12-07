@@ -9,16 +9,16 @@ module.exports = (sequelize) => {
         primaryKey: true
       },
       formato: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       },
       nombre: {
-          type: DataTypes.STRING
+        type: DataTypes.STRING
       },
       datos: {
-          type: DataTypes.BLOB('long')
+        type: DataTypes.BLOB('long')
       },
       uploadedOn: {
-          type: DataTypes.DATE
+        type: DataTypes.DATE
       }
     },
     {

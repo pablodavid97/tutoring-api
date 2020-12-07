@@ -48,20 +48,23 @@ notificacionController.deleteAllNotificationsByMeetingId = async (
   }
 };
 
-notificacionController.updateNotificationStatus = async (status, notificationid) => {
+notificacionController.updateNotificationStatus = async (
+  status,
+  notificationid
+) => {
   try {
     await notificacion.update(
-      { estadoNotificacionId: status},
+      { estadoNotificacionId: status },
       {
         where: {
           id: notificationid
         }
       }
-    )
+    );
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
+};
 
 notificacionController.getNotificationByMeetingId = async (meetingId) => {
   try {
@@ -71,10 +74,10 @@ notificacionController.getNotificationByMeetingId = async (meetingId) => {
       }
     });
 
-    return notification[0]
+    return notification[0];
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
+};
 
 module.exports = notificacionController;

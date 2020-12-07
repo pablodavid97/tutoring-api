@@ -18,32 +18,32 @@ const semestreController = require('../controllers/semester.controller');
 const gpaPorSemestreController = require('../controllers/gpa-por-semestre.controller');
 const carreraController = require('../controllers/carrera.controller');
 const gpaViewController = require('../controllers/gpa-view.controller');
-const rolesUsuarioViewController = require('../controllers/roles-usuario-view.controller')
+const rolesUsuarioViewController = require('../controllers/roles-usuario-view.controller');
+const { getUserById } = require('../controllers/usuario.controller');
 
 router.get('/home', async (req, res) => {
   usuarioId = req.query.userId;
 
   // converts request into json objects
   var requestRoles = req.query.userRoles;
-  var length = requestRoles.length
+  var length = requestRoles.length;
 
-  userRoles = []
-  for(var i = 0; i < length; i++) {
-    userRoles.push(JSON.parse(requestRoles[i]))
+  userRoles = [];
+  for (var i = 0; i < length; i++) {
+    userRoles.push(JSON.parse(requestRoles[i]));
   }
-  
+
   // information to be displayed for students
   isStudent = false;
   studentInfo = undefined;
   tutor = undefined;
   gpa = 0;
-  gpaList = {}
-
+  gpaList = {};
 
   try {
-    for(rol of userRoles) {
-      if(rol.rolId === 3) {
-        isStudent = true
+    for (rol of userRoles) {
+      if (rol.rolId === 3) {
+        isStudent = true;
       }
     }
 
@@ -54,7 +54,9 @@ router.get('/home', async (req, res) => {
 
       tutor = await usuarioViewController.getUserById(profesorId);
 
-      gpa = await gpaPorSemestreController.getAverageGPAByStudent(studentInfo.id);
+      gpa = await gpaPorSemestreController.getAverageGPAByStudent(
+        studentInfo.id
+      );
 
       gpaList = await gpaViewController.getGPAListByStudent(studentInfo.id);
     }
@@ -62,7 +64,7 @@ router.get('/home', async (req, res) => {
     // Actualiza las reuniones diarias
     await reunionController.setDailyMeetings();
 
-    res.send({ studentInfo, tutor, gpa, gpaList});
+    res.send({ studentInfo, tutor, gpa, gpaList });
   } catch (error) {
     logger.error(error.message);
   }
@@ -70,15 +72,14 @@ router.get('/home', async (req, res) => {
 
 router.get('/user-roles', async (req, res) => {
   try {
-    usuarioId = req.query.userId
-    userRoles = await rolesUsuarioViewController.getUserRoles(usuarioId)
+    usuarioId = req.query.userId;
+    userRoles = await rolesUsuarioViewController.getUserRoles(usuarioId);
 
-    res.send({userRoles})
-
-  } catch(error){
-    logger.error(error.message)
+    res.send({ userRoles });
+  } catch (error) {
+    logger.error(error.message);
   }
-})
+});
 
 router.get('/tutor', async (req, res) => {
   estudianteId = req.query.estudianteId;
@@ -103,11 +104,13 @@ router.get('/students', async (req, res) => {
     );
 
     for (student of estudiantes) {
-      studentGPA = await gpaPorSemestreController.getAverageGPAByStudent(student.id)
-      student.dataValues.gpa = studentGPA
+      studentGPA = await gpaPorSemestreController.getAverageGPAByStudent(
+        student.id
+      );
+      student.dataValues.gpa = studentGPA;
     }
 
-    res.json({estudiantes});
+    res.json({ estudiantes });
   } catch (error) {
     console.error(error.message);
   }
@@ -120,7 +123,7 @@ router.get('/student', async (req, res) => {
     gpa = await gpaPorSemestreController.getAverageGPAByStudent(estudianteId);
     gpaList = await gpaViewController.getGPAListByStudent(estudianteId);
 
-    res.json({ estudiante, gpa, gpaList});
+    res.json({ estudiante, gpa, gpaList });
   } catch (error) {
     console.error(error.message);
   }
@@ -129,22 +132,22 @@ router.get('/student', async (req, res) => {
 // value used for filters
 router.get('/semesters', async (req, res) => {
   try {
-    semestres = await semestreController.getAllSemestres()
-    res.json({semestres})
+    semestres = await semestreController.getAllSemestres();
+    res.json({ semestres });
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
 });
 
 router.get('/carreras', async (req, res) => {
-  try{
-    carreras = await carreraController.getAllCarreras()
+  try {
+    carreras = await carreraController.getAllCarreras();
 
-    res.json({carreras})
+    res.json({ carreras });
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-})
+});
 
 router.get('/reports', async (req, res) => {
   try {
@@ -153,7 +156,7 @@ router.get('/reports', async (req, res) => {
     reunionesEliminadas = await reunionViewController.getReunionesEliminadas();
 
     conditionedUsers = await estudianteController.getConditionedStudents();
-    conditionedUsersNum = conditionedUsers.length
+    conditionedUsersNum = conditionedUsers.length;
 
     gpa = await estudianteController.getAverageGPA();
 
@@ -166,65 +169,73 @@ router.get('/reports', async (req, res) => {
 // filters applied
 router.get('/reports-by-semester/', async (req, res) => {
   try {
-    semesterId = req.query.semesterId
+    semesterId = req.query.semesterId;
 
-    if(semesterId === "0") {
+    if (semesterId === '0') {
       reuniones = await reunionViewController.getAllReuniones();
-      
+
       reunionesEliminadas = await reunionViewController.getReunionesEliminadas();
-      
+
       conditionedUsers = await estudianteController.getConditionedStudents();
-      conditionedUsersNum = conditionedUsers.length
-      
+      conditionedUsersNum = conditionedUsers.length;
+
       gpa = await estudianteController.getAverageGPA();
     } else {
-      reuniones = await reunionViewController.getReunionesBySemestre(semesterId)
+      reuniones = await reunionViewController.getReunionesBySemestre(
+        semesterId
+      );
 
-      reunionesEliminadas = await reunionViewController.getReunionesEliminadasBySemestre(semesterId)
+      reunionesEliminadas = await reunionViewController.getReunionesEliminadasBySemestre(
+        semesterId
+      );
 
-      conditionedUsers = await estudianteController.getConditionedStudentsBySemestre(semesterId);
-      conditionedUsersNum = conditionedUsers.length
+      conditionedUsers = await estudianteController.getConditionedStudentsBySemestre(
+        semesterId
+      );
+      conditionedUsersNum = conditionedUsers.length;
 
-      gpa = await estudianteController.getAverageGPABySemestre(semesterId)
+      gpa = await estudianteController.getAverageGPABySemestre(semesterId);
     }
 
-    res.json({reuniones, reunionesEliminadas, gpa, conditionedUsersNum})
-
+    res.json({ reuniones, reunionesEliminadas, gpa, conditionedUsersNum });
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-})
+});
 
 router.get('/reports-by-carrera/', async (req, res) => {
   try {
-    carreraId = req.query.carreraId
+    carreraId = req.query.carreraId;
 
-    if(carreraId === "0") {
+    if (carreraId === '0') {
       reuniones = await reunionViewController.getAllReuniones();
-      
+
       reunionesEliminadas = await reunionViewController.getReunionesEliminadas();
-      
+
       conditionedUsers = await estudianteController.getConditionedStudents();
-      conditionedUsersNum = conditionedUsers.length
-      
+      conditionedUsersNum = conditionedUsers.length;
+
       gpa = await estudianteController.getAverageGPA();
     } else {
-      reuniones = await reunionViewController.getReunionesByCarrera(carreraId)
+      reuniones = await reunionViewController.getReunionesByCarrera(carreraId);
 
-      reunionesEliminadas = await reunionViewController.getReunionesEliminadasByCarrera(carreraId)
+      reunionesEliminadas = await reunionViewController.getReunionesEliminadasByCarrera(
+        carreraId
+      );
 
-      conditionedUsers = await estudianteController.getConditionedStudentsByCarrera(carreraId);
-      conditionedUsersNum = conditionedUsers.length
+      conditionedUsers = await estudianteController.getConditionedStudentsByCarrera(
+        carreraId
+      );
+      conditionedUsersNum = conditionedUsers.length;
 
-      gpa = await estudianteController.getAverageGPAByCarrera(carreraId)
+      gpa = await estudianteController.getAverageGPAByCarrera(carreraId);
     }
 
-    res.json({reuniones, reunionesEliminadas, gpa, conditionedUsersNum})
-
+    res.json({ reuniones, reunionesEliminadas, gpa, conditionedUsersNum });
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-})
+});
 
 router.get('/notifications', async (req, res) => {
   try {
@@ -233,7 +244,9 @@ router.get('/notifications', async (req, res) => {
 
     rol = await rolController.getRolById(rolId);
 
-    notifications = await notificacionViewController.getNotificationsByUserId(userId)
+    notifications = await notificacionViewController.getNotificationsByUserId(
+      userId
+    );
 
     res.json({ rol, notifications });
   } catch (error) {
@@ -243,83 +256,118 @@ router.get('/notifications', async (req, res) => {
 
 router.get('/active-notifications', async (req, res) => {
   try {
-    notifications = await notificacionViewController.getActiveNotificationsByUserId(req.query.userId)
+    notifications = await notificacionViewController.getActiveNotificationsByUserId(
+      req.query.userId
+    );
 
-    res.json({notifications})
+    res.json({ notifications });
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-})
+});
 
 router.post('/delete-notification', async (req, res) => {
   try {
-    await notificacionController.deleteNotificacion(req.body.notificationId)
+    await notificacionController.deleteNotificacion(req.body.notificationId);
 
     res.json({ status: 'ok' });
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
 });
 
 router.post('/archive-notification', async (req, res) => {
   try {
-    await notificacionController.updateNotificationStatus(3, req.body.notificationId)
+    await notificacionController.updateNotificationStatus(
+      3,
+      req.body.notificationId
+    );
 
     res.json({ status: 'ok' });
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
 });
 
 router.post('/viewed-notification', async (req, res) => {
   try {
-    await notificacionController.updateNotificationStatus(2, req.body.notificationId)
-
-    res.json({status: "ok"})
-  } catch (error) {
-    logger.error(error.message)
-  }
-})
-
-router.post('/edit-profile', async (req, res) => {
-  try {
-    lastNames = req.body.lastNames
-    firstNames = req.body.firstNames
-    email = req.body.email
-    phone = req.body.phone
-    userId = req.body.userId
-    file = req.body.file
-
-    lastImageId = undefined
-
-    if(file) {
-      image = await imagenController.uploadFile(file)
-
-      lastImageId = await imagenController.getLastImageId() 
-    }
-
-    await usuarioController.setUserProfile(firstNames, lastNames, email, phone, userId, lastImageId)
+    await notificacionController.updateNotificationStatus(
+      2,
+      req.body.notificationId
+    );
 
     res.json({ status: 'ok' });
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-})
+});
+
+router.post('/edit-profile', async (req, res) => {
+  try {
+    lastNames = req.body.lastNames;
+    firstNames = req.body.firstNames;
+    email = req.body.email;
+    phone = req.body.phone;
+    userId = req.body.userId;
+    file = req.body.file;
+
+    lastImageId = undefined;
+
+    if (file) {
+      image = await imagenController.uploadFile(file);
+
+      lastImageId = await imagenController.getLastImageId();
+    }
+
+    await usuarioController.setUserProfile(
+      null,
+      null,
+      firstNames,
+      lastNames,
+      email,
+      phone,
+      userId,
+      lastImageId
+    );
+
+    user = await usuarioController.getUserById(userId)
+    
+    if(user.imagenId) {
+      imagen = await imagenController.getImageById(user.imagenId)
+
+      imagen.datos = imagen.datos.toString('binary')
+
+      user.imagen = imagen
+    }
+    
+
+    res.json({ user });
+  } catch (error) {
+    logger.error(error.message);
+  }
+});
 
 router.post('/change-password', async (req, res) => {
-  try{
-    await usuarioController.setUserPassword(
-      req.body.hash,
-      req.body.userId
-    );
+  try {
+    await usuarioController.setUserPassword(req.body.hash, req.body.userId);
 
     usuario = await usuarioViewController.getUserById(req.body.userId);
 
     res.json(usuario);
-  } catch(error) {
-    logger.error(error.message)
+  } catch (error) {
+    logger.error(error.message);
   }
-})
+});
+
+router.get('/current_semester', async (req, res) => {
+  try {
+    semestre = await semestreController.getCurrentSemester();
+
+    res.json({ semestre });
+  } catch (error) {
+    logger.error(error.message);
+  }
+});
 
 //Decano
 router.get('/decanos', async (req, res) => {

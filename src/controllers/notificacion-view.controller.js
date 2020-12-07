@@ -23,7 +23,7 @@ notificacionViewController.getActiveNotificationsByUserId = async (userId) => {
   try {
     notifications = notificacionView.findAll({
       where: {
-        [Sequelize.Op.and]: {usuarioId: userId, estadoNotificacionId: 1}
+        [Sequelize.Op.and]: { usuarioId: userId, estadoNotificacionId: 1 }
       },
       order: [['id', 'DESC']]
     });
