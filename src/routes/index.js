@@ -61,9 +61,6 @@ router.get('/home', async (req, res) => {
       gpaList = await gpaViewController.getGPAListByStudent(studentInfo.id);
     }
 
-    // Actualiza las reuniones diarias
-    await reunionController.setDailyMeetings();
-
     res.send({ studentInfo, tutor, gpa, gpaList });
   } catch (error) {
     logger.error(error.message);

@@ -6,7 +6,8 @@ const HttpStatusCode = require('http-status-codes');
 const { logger, expressLogger } = require('./utils/logger');
 const database = require('./models/connection-manager');
 const path = require('path');
-const usuarioController = require('./controllers/usuario.controller');
+const schedule = require('node-schedule');
+const reunionController = require('./controllers/reunion.controller');
 
 require('dotenv').config();
 const hostname = '127.0.0.1';
@@ -44,14 +45,22 @@ app.use(errorHandler);
 global.srcDir = path.resolve(__dirname);
 global.appRoot = path.resolve(__dirname, '../');
 
-// Routes
+// SCHEDULER
+var rule = new schedule.RecurrenceRule()
+rule.hour = 0
+schedule.scheduleJob(rule, async () => {
+  console.log("Setting daily meetings...");
+  await reunionController.setDailyMeetings()
+})
+
+// ROUTES
 app.use(require('./routes/index'));
 app.use(require('./routes/authentication'));
 app.use('/meetings', require('./routes/meetings'));
 app.use(require('./routes/mailer'));
 app.use('/admin', require('./routes/admin'));
 
-// DB Connection
+// DB CONNECTION
 database
   .connect()
   .then(
