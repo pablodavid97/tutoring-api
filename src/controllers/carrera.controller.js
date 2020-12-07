@@ -14,16 +14,19 @@ carreraController.getAllCarreras = async () => {
 
 carreraController.insertCarrera = async (id, carreraItem) => {
   try {
-    await carrera.create({
-      id: id,
-      carrera: carreraItem
-    }, {
-      fields: ["id", "carrera"]
-    })
-  } catch(error) {
-    logger.error(error.message)
+    await carrera.create(
+      {
+        id: id,
+        carrera: carreraItem
+      },
+      {
+        fields: ['id', 'carrera']
+      }
+    );
+  } catch (error) {
+    logger.error(error.message);
   }
-}
+};
 
 carreraController.getCarreraId = async (carreraItem) => {
   try {
@@ -33,18 +36,18 @@ carreraController.getCarreraId = async (carreraItem) => {
       }
     });
 
-    carreraId = undefined
+    carreraId = undefined;
 
-    if(career.length > 0) {
-      console.log("carrera: ", career);
-      carreraId = career[0].id
+    if (career.length > 0) {
+      console.log('carrera: ', career);
+      carreraId = career[0].id;
     }
 
-    return carreraId
+    return carreraId;
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-} 
+};
 
 carreraController.getLastCarreraId = async () => {
   try {
@@ -52,30 +55,28 @@ carreraController.getLastCarreraId = async () => {
       order: [['id', 'DESC']]
     });
 
-    lastCarreraId = 0
+    lastCarreraId = 0;
 
-    if(lastCarrera) {
-      lastCarreraId = lastCarrera.id
+    if (lastCarrera) {
+      lastCarreraId = lastCarrera.id;
     }
 
-    return lastCarreraId
-
+    return lastCarreraId;
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-
-}
+};
 
 // Truncates table
 carreraController.clearTable = async () => {
   try {
-    console.log("BReak point");
+    console.log('BReak point');
     await carrera.destroy({
       where: {}
-    })
+    });
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
+};
 
 module.exports = carreraController;

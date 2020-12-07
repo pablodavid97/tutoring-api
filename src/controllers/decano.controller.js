@@ -15,16 +15,19 @@ decanoController.find = async () => {
 
 decanoController.insertDecano = async (userId, carrera) => {
   try {
-    await decano.create({
-      id: userId,
-      usuarioId: userId,
-      carreraId: carrera
-    }, {
-      fields: ["id", "usuarioId", "carreraId"]
-    });
+    await decano.create(
+      {
+        id: userId,
+        usuarioId: userId,
+        carreraId: carrera
+      },
+      {
+        fields: ['id', 'usuarioId', 'carreraId']
+      }
+    );
   } catch (error) {
     logger.error(error.message);
   }
-}
+};
 
 module.exports = decanoController;

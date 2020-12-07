@@ -46,12 +46,12 @@ global.srcDir = path.resolve(__dirname);
 global.appRoot = path.resolve(__dirname, '../');
 
 // SCHEDULER
-var rule = new schedule.RecurrenceRule()
-rule.hour = 0
+var rule = new schedule.RecurrenceRule();
+rule.hour = 0;
 schedule.scheduleJob(rule, async () => {
-  console.log("Setting daily meetings...");
-  await reunionController.setDailyMeetings()
-})
+  console.log('Setting daily meetings...');
+  await reunionController.setDailyMeetings();
+});
 
 // ROUTES
 app.use(require('./routes/index'));

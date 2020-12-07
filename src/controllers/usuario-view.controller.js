@@ -45,17 +45,16 @@ usuarioViewController.getLastUserId = async () => {
       order: [['id', 'DESC']]
     });
 
-    lastUserId = 0
+    lastUserId = 0;
 
-    if(lastUser) {
-      lastUserId = lastUser.id
+    if (lastUser) {
+      lastUserId = lastUser.id;
     }
 
-    return lastUserId
-
+    return lastUserId;
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
+};
 
 module.exports = usuarioViewController;

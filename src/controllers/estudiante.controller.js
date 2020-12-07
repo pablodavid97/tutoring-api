@@ -178,18 +178,34 @@ estudianteController.getConditionedStudentsByCarrera = async (carreraId) => {
   }
 };
 
-estudianteController.insertEstudiante = async (userId, estudianteObject, tutorId, carrera) => {
-  await estudiante.create({
-    id: userId,
-    status: estudianteObject.status,
-    periodoDeAdmision: estudianteObject.periodoDeAdmision,
-    tipoDeAdmision: estudianteObject.tipoDeAdmision,
-    profesorId: tutorId,
-    usuarioId: userId,
-    carreraId: carrera
-  }, {
-    fields: ["id", "status", "periodoDeAdmision", "tipoDeAdmision", "profesorId", "usuarioId", "carreraId"]
-  })
-}
+estudianteController.insertEstudiante = async (
+  userId,
+  estudianteObject,
+  tutorId,
+  carrera
+) => {
+  await estudiante.create(
+    {
+      id: userId,
+      status: estudianteObject.status,
+      periodoDeAdmision: estudianteObject.periodoDeAdmision,
+      tipoDeAdmision: estudianteObject.tipoDeAdmision,
+      profesorId: tutorId,
+      usuarioId: userId,
+      carreraId: carrera
+    },
+    {
+      fields: [
+        'id',
+        'status',
+        'periodoDeAdmision',
+        'tipoDeAdmision',
+        'profesorId',
+        'usuarioId',
+        'carreraId'
+      ]
+    }
+  );
+};
 
 module.exports = estudianteController;

@@ -14,27 +14,29 @@ estadoNotificacionController.find = async () => {
 
 estadoNotificacionController.insertEstado = async (estadoItem) => {
   try {
-    await estadoNotificacion.create({
-      id: estadoItem.id,
-      estado: estadoItem.estado
-    }, {
-      fields: ["id", "estado"]
-    })
-  } catch(error) {
-    logger.error(error.message)
+    await estadoNotificacion.create(
+      {
+        id: estadoItem.id,
+        estado: estadoItem.estado
+      },
+      {
+        fields: ['id', 'estado']
+      }
+    );
+  } catch (error) {
+    logger.error(error.message);
   }
-}
+};
 
 // Truncates table
 estadoNotificacionController.clearTable = async () => {
   try {
     await estadoNotificacion.destroy({
       where: {}
-    })
+    });
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
-
+};
 
 module.exports = estadoNotificacionController;

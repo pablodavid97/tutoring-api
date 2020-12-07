@@ -1,14 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const usuarioController = require('../controllers/usuario.controller');
 const usuarioViewController = require('../controllers/usuario-view.controller');
-const estudianteController = require('../controllers/estudiante.controller');
 const estudianteViewController = require('../controllers/estudiante-view.controller');
 const reunionViewController = require('../controllers/reunion-view.controller');
 const { logger } = require('../utils/logger');
 const reunionController = require('../controllers/reunion.controller');
 const notificacionController = require('../controllers/notificacion.controller');
-const { reunion } = require('../models/connection-manager');
 
 router.get('/', async (req, res) => {
   // converts request into json objects
@@ -69,7 +66,7 @@ router.get('/', async (req, res) => {
 
 router.post('/create', async (req, res) => {
   try {
-    console.log("Datos ingresados: ", req.body);
+    console.log('Datos ingresados: ', req.body);
     meeting = await reunionController.createMeeting(
       req.body.subject,
       req.body.description,

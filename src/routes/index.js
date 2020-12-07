@@ -9,7 +9,6 @@ const profesorController = require('../controllers/profesor.controller');
 const reunionController = require('../controllers/reunion.controller');
 const estudianteViewController = require('../controllers/estudiante-view.controller');
 const reunionViewController = require('../controllers/reunion-view.controller');
-const profesorViewController = require('../controllers/profesor-view.controller');
 const notificacionViewController = require('../controllers/notificacion-view.controller');
 const { logger } = require('../utils/logger');
 const imagenController = require('../controllers/imagen.controller');
@@ -19,7 +18,6 @@ const gpaPorSemestreController = require('../controllers/gpa-por-semestre.contro
 const carreraController = require('../controllers/carrera.controller');
 const gpaViewController = require('../controllers/gpa-view.controller');
 const rolesUsuarioViewController = require('../controllers/roles-usuario-view.controller');
-const { getUserById } = require('../controllers/usuario.controller');
 
 router.get('/home', async (req, res) => {
   usuarioId = req.query.userId;
@@ -327,16 +325,15 @@ router.post('/edit-profile', async (req, res) => {
       lastImageId
     );
 
-    user = await usuarioController.getUserById(userId)
-    
-    if(user.imagenId) {
-      imagen = await imagenController.getImageById(user.imagenId)
+    user = await usuarioController.getUserById(userId);
 
-      imagen.datos = imagen.datos.toString('binary')
+    if (user.imagenId) {
+      imagen = await imagenController.getImageById(user.imagenId);
 
-      user.imagen = imagen
+      imagen.datos = imagen.datos.toString('binary');
+
+      user.imagen = imagen;
     }
-    
 
     res.json({ user });
   } catch (error) {

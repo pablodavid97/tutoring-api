@@ -111,23 +111,29 @@ usuarioController.setUserProfile = async (
 ) => {
   try {
     if (code) {
-      await usuario.update({
-        codigo: code
-      }, {
-        where: {
-          id: userId
+      await usuario.update(
+        {
+          codigo: code
+        },
+        {
+          where: {
+            id: userId
+          }
         }
-      })
+      );
     }
 
-    if(email) {
-      await usuario.update({
-        correoInstitucional: email
-      }, {
-        where: {
-          id: userId
+    if (email) {
+      await usuario.update(
+        {
+          correoInstitucional: email
+        },
+        {
+          where: {
+            id: userId
+          }
         }
-      })
+      );
     }
 
     if (firstNames) {
@@ -206,22 +212,34 @@ usuarioController.setUserProfilePicture = async (image, userId) => {
 
 usuarioController.insertUser = async (userId, userObject, firstTimeLogin) => {
   try {
-    await usuario.create({
-      id: userId,
-      correoInstitucional: userObject.correoInstitucional,
-      codigo: userObject.codigo,
-      nombres: userObject.nombres,
-      apellidos: userObject.apellidos,
-      correoPersonal: userObject.correoPersonal,
-      telefono: userObject.telefono,
-      firstTimeLogin: firstTimeLogin
-    }, {
-      fields: ["id", "correoInstitucional", "codigo", "nombres", "apellidos", "correoPersonal", "telefono", "firstTimeLogin"]
-    })
+    await usuario.create(
+      {
+        id: userId,
+        correoInstitucional: userObject.correoInstitucional,
+        codigo: userObject.codigo,
+        nombres: userObject.nombres,
+        apellidos: userObject.apellidos,
+        correoPersonal: userObject.correoPersonal,
+        telefono: userObject.telefono,
+        firstTimeLogin: firstTimeLogin
+      },
+      {
+        fields: [
+          'id',
+          'correoInstitucional',
+          'codigo',
+          'nombres',
+          'apellidos',
+          'correoPersonal',
+          'telefono',
+          'firstTimeLogin'
+        ]
+      }
+    );
   } catch (error) {
     logger.error(error);
   }
-}
+};
 
 usuarioController.clearTable = async () => {
   try {
@@ -231,11 +249,11 @@ usuarioController.clearTable = async () => {
         //   [Sequelize.Op.not]: 1
         // }
       }
-    })
+    });
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
+};
 
 usuarioController.deleteUserById = async (userId) => {
   try {
@@ -243,10 +261,10 @@ usuarioController.deleteUserById = async (userId) => {
       where: {
         id: userId
       }
-    })
+    });
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
+};
 
 module.exports = usuarioController;

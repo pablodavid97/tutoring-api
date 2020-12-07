@@ -15,16 +15,19 @@ profesorController.find = async () => {
 
 profesorController.insertProfesor = async (userId, carrera) => {
   try {
-    await profesor.create({
-      id: userId,
-      usuarioId: userId,
-      carreraId: carrera
-    }, {
-      fields: ["id", "usuarioId", "carreraId"]
-    });
+    await profesor.create(
+      {
+        id: userId,
+        usuarioId: userId,
+        carreraId: carrera
+      },
+      {
+        fields: ['id', 'usuarioId', 'carreraId']
+      }
+    );
   } catch (error) {
     logger.error(error.message);
   }
-}
+};
 
 module.exports = profesorController;

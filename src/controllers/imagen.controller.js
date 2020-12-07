@@ -68,10 +68,10 @@ imagenController.getImageById = async (imageId) => {
       }
     });
 
-    return image[0]
+    return image[0];
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
+};
 
 module.exports = imagenController;

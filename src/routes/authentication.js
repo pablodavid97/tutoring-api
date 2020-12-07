@@ -3,21 +3,12 @@ const express = require('express');
 const router = express.Router();
 const usuarioController = require('../controllers/usuario.controller');
 const usuarioViewController = require('../controllers/usuario-view.controller');
-const rolController = require('../controllers/rol.controller');
-const estudianteController = require('../controllers/estudiante.controller');
-const decanoController = require('../controllers/decano.controller');
-const profesorController = require('../controllers/profesor.controller');
-const reunionController = require('../controllers/reunion.controller');
-const estudianteViewController = require('../controllers/estudiante-view.controller');
-const reunionViewController = require('../controllers/reunion-view.controller');
-const profesorViewController = require('../controllers/profesor-view.controller');
-const fs = require('fs');
 const imagenController = require('../controllers/imagen.controller');
 
 router.get('/user-by-email', async (req, res) => {
   try {
     user = await usuarioViewController.getUserByEmail(req.query.email);
-    console.log("user: ", user);
+    console.log('user: ', user);
 
     res.json(user);
   } catch (error) {
@@ -37,19 +28,19 @@ router.get('/user-by-id', async (req, res) => {
 
 router.get('/image-by-id', async (req, res) => {
   try {
-    let imageId = req.query.imageId
+    let imageId = req.query.imageId;
 
-    console.log("Imagen Id: ", imageId)
-    
+    console.log('Imagen Id: ', imageId);
+
     image = await imagenController.getImageById(imageId);
 
-    image.datos = image.datos.toString('binary')
+    image.datos = image.datos.toString('binary');
 
-    res.json(image)
+    res.json(image);
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-})
+});
 
 router.post('/create-password', async (req, res) => {
   try {

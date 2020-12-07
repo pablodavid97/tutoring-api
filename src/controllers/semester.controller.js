@@ -54,17 +54,20 @@ semestreController.setCurrentSemester = async (semesterId) => {
 
 semestreController.insertSemestre = async (id, semester, currentSemester) => {
   try {
-    await semestre.create({
-      id: id,
-      semestre: semester,
-      currentSemester: currentSemester
-    }, {
-      fields: ["id", "semestre", "currentSemester"]
-    })
+    await semestre.create(
+      {
+        id: id,
+        semestre: semester,
+        currentSemester: currentSemester
+      },
+      {
+        fields: ['id', 'semestre', 'currentSemester']
+      }
+    );
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
+};
 
 semestreController.getLastSemestreId = async () => {
   try {
@@ -72,18 +75,17 @@ semestreController.getLastSemestreId = async () => {
       order: [['id', 'DESC']]
     });
 
-    lastSemesterId = 0
+    lastSemesterId = 0;
 
-    if(lastSemester) {
-      lastSemesterId = lastSemester.id
+    if (lastSemester) {
+      lastSemesterId = lastSemester.id;
     }
 
-    return lastSemesterId
-
+    return lastSemesterId;
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
+};
 
 semestreController.getSemestreId = async (semesterItem) => {
   try {
@@ -93,27 +95,27 @@ semestreController.getSemestreId = async (semesterItem) => {
       }
     });
 
-    semesterId = undefined
+    semesterId = undefined;
 
-    if(semester.length > 0) {
-      semesterId = semester[0].id
+    if (semester.length > 0) {
+      semesterId = semester[0].id;
     }
 
-    return semesterId
-  } catch(error) {
-    logger.error(error.message)
+    return semesterId;
+  } catch (error) {
+    logger.error(error.message);
   }
-}
+};
 
 // Truncates table
 semestreController.clearTable = async () => {
   try {
     await semestre.destroy({
       where: {}
-    })
+    });
   } catch (error) {
-    logger.error(error.message)
+    logger.error(error.message);
   }
-}
+};
 
 module.exports = semestreController;
