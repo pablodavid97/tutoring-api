@@ -100,14 +100,36 @@ usuarioController.setUserPassword = async (hash, userId) => {
 
 // Updates user profile with optional parameters
 usuarioController.setUserProfile = async (
+  code,
+  email,
   firstNames,
   lastNames,
-  email,
+  personalEmail,
   phone,
   userId,
   imageId
 ) => {
   try {
+    if (code) {
+      await usuario.update({
+        codigo: code
+      }, {
+        where: {
+          id: userId
+        }
+      })
+    }
+
+    if(email) {
+      await usuario.update({
+        correoInstitucional: email
+      }, {
+        where: {
+          id: userId
+        }
+      })
+    }
+
     if (firstNames) {
       await usuario.update(
         { nombres: firstNames },
@@ -130,9 +152,9 @@ usuarioController.setUserProfile = async (
       );
     }
 
-    if (email) {
+    if (personalEmail) {
       await usuario.update(
-        { correoPersonal: email },
+        { correoPersonal: personalEmail },
         {
           where: {
             id: userId
@@ -208,6 +230,18 @@ usuarioController.clearTable = async () => {
         // id: {
         //   [Sequelize.Op.not]: 1
         // }
+      }
+    })
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
+
+usuarioController.deleteUserById = async (userId) => {
+  try {
+    await usuario.destroy({
+      where: {
+        id: userId
       }
     })
   } catch (error) {

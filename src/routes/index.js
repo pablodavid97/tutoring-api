@@ -320,6 +320,8 @@ router.post('/edit-profile', async (req, res) => {
     }
 
     await usuarioController.setUserProfile(
+      null,
+      null,
       firstNames,
       lastNames,
       email,

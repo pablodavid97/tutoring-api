@@ -39,4 +39,23 @@ usuarioViewController.getAllUsuarios = async () => {
   }
 };
 
+usuarioViewController.getLastUserId = async () => {
+  try {
+    lastUser = await usuarioView.findOne({
+      order: [['id', 'DESC']]
+    });
+
+    lastUserId = 0
+
+    if(lastUser) {
+      lastUserId = lastUser.id
+    }
+
+    return lastUserId
+
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
+
 module.exports = usuarioViewController;

@@ -53,13 +53,56 @@ semestreController.setCurrentSemester = async (semesterId) => {
 };
 
 semestreController.insertSemestre = async (id, semester, currentSemester) => {
-  await semestre.create({
-    id: id,
-    semestre: semester,
-    currentSemester: currentSemester
-  }, {
-    fields: ["id", "semestre", "currentSemester"]
-  })
+  try {
+    await semestre.create({
+      id: id,
+      semestre: semester,
+      currentSemester: currentSemester
+    }, {
+      fields: ["id", "semestre", "currentSemester"]
+    })
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
+
+semestreController.getLastSemestreId = async () => {
+  try {
+    lastSemester = await semestre.findOne({
+      order: [['id', 'DESC']]
+    });
+
+    lastSemesterId = 0
+
+    if(lastSemester) {
+      lastSemesterId = lastSemester.id
+    }
+
+    return lastSemesterId
+
+  } catch (error) {
+    logger.error(error.message)
+  }
+}
+
+semestreController.getSemestreId = async (semesterItem) => {
+  try {
+    semester = await semestre.findAll({
+      where: {
+        semestre: semesterItem
+      }
+    });
+
+    semesterId = undefined
+
+    if(semester.length > 0) {
+      semesterId = semester[0].id
+    }
+
+    return semesterId
+  } catch(error) {
+    logger.error(error.message)
+  }
 }
 
 // Truncates table

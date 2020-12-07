@@ -26,6 +26,8 @@ const estadoNotificacionController = require('../controllers/estado-notificacion
 const csv = require('csvtojson');
 const rolesUsuarioController = require('../controllers/roles-usuario.controller');
 const rolesUsuarioModel = require('../models/entities/roles-usuario.model');
+const { getUserByEmail } = require('../controllers/usuario.controller');
+const { usuarioView } = require('../models/connection-manager');
 
 router.get('/', async (req, res) => {
   try {
@@ -45,9 +47,9 @@ router.get('/', async (req, res) => {
 
     semesters = await semestreController.getAllSemestres();
 
-    // console.log("Users: ", users);
+    careers = await carreraController.getAllCarreras();
 
-    res.json({ users, semesters });
+    res.json({ users, semesters, careers });
   } catch (error) {
     logger.error(error.message);
   }
@@ -84,6 +86,7 @@ router.post('/files-upload', async (req, res) => {
   const deansPath = filesPath + files.deans.nombre
   const professorsPath = filesPath + files.professors.nombre
   const studentsPath = filesPath + files.students.nombre
+  const gpasPath = filesPath + files.gpas.nombre
   const adminsPath = filesPath + files.admins.nombre
 
   console.log('Creating files...');
@@ -93,12 +96,203 @@ router.post('/files-upload', async (req, res) => {
   fs.writeFileSync(deansPath, new Buffer.from(files.deans.datos, 'binary'));
   fs.writeFileSync(professorsPath, new Buffer.from(files.professors.datos, 'binary'));
   fs.writeFileSync(studentsPath, new Buffer.from(files.students.datos, 'binary'));
+  fs.writeFileSync(gpasPath, new Buffer.from(files.gpas.datos, 'binary'));
   fs.writeFileSync(adminsPath, new Buffer.from(files.admins.datos, 'binary'));
 
   console.log("Files were created successfully!");
 
-
   await fileParser(filesPath)
+
+  console.log("Deleting files...");
+
+  fs.unlinkSync(careersPath);
+  fs.unlinkSync(semestersPath);
+  fs.unlinkSync(deansPath);
+  fs.unlinkSync(professorsPath);
+  fs.unlinkSync(studentsPath);
+  fs.unlinkSync(gpasPath);
+  fs.unlinkSync(adminsPath);
+
+  console.log("Files were deleted!");
+
+  res.json({ status: 'ok' });
+})
+
+router.get('/users', async (req, res) => {
+  try {
+    users = await usuarioViewController.getAllUsuarios();
+
+    for (user of users) {
+      roles = await rolesUsuarioViewController.getUserRoles(user.id);
+
+      var txt = '';
+      for (rol of roles) {
+        txt += rol.rol + ' ';
+      }
+
+      user.dataValues.roles = roles;
+      user.dataValues.rolesText = txt;
+    }
+
+    res.json({ users });
+  } catch (error) {
+    logger.error(error.message);
+  }
+});
+
+router.post('/edit-user', async (req, res) => {
+  try {
+    code = req.body.code,
+    email = req.body.email,
+    lastNames = req.body.lastNames;
+    firstNames = req.body.firstNames;
+    personalEmail = req.body.personalEmail;
+    phone = req.body.phone;
+    userId = req.body.userId;
+    file = req.body.file;
+
+    lastImageId = undefined;
+
+    if (file) {
+      image = await imagenController.uploadFile(file);
+
+      lastImageId = await imagenController.getLastImageId();
+    }
+
+    await usuarioController.setUserProfile(
+      code,
+      email,
+      firstNames,
+      lastNames,
+      personalEmail,
+      phone,
+      userId,
+      lastImageId
+    );
+
+    res.json({ status: 'ok' });
+  } catch (error) {
+    logger.error(error.message);
+  }
+})
+
+router.post('/delete-user', async (req, res) => {
+  try {
+    userId = req.body.userId
+    await usuarioController.deleteUserById(userId)
+
+    res.json({ status: 'ok' });
+  } catch (error) {
+    logger.error(error.message)
+  }
+})
+
+router.post('/add-users', async (req, res) => {
+  files = req.body.files
+
+  const filesPath = global.appRoot + '/resources/static/assets/tmp/';
+  let deansPath = undefined
+  let professorsPath = undefined
+  let studentsPath = undefined
+  let adminsPath = undefined
+
+  console.log('Creating files...');
+
+  if(files.deans) {
+    console.log("deans: ", files.deans);
+    deansPath = filesPath + files.deans.nombre
+
+    fs.writeFileSync(deansPath, new Buffer.from(files.deans.datos, 'binary'));
+  }
+
+  if(files.professors) {
+    professorsPath = filesPath + files.professors.nombre
+    fs.writeFileSync(professorsPath, new Buffer.from(files.professors.datos, 'binary'));
+  }
+
+  if(files.students) {
+    studentsPath = filesPath + files.students.nombre
+    fs.writeFileSync(studentsPath, new Buffer.from(files.students.datos, 'binary'));
+  }
+
+  if(files.admins) {
+    adminsPath = filesPath + files.admins.nombre
+    fs.writeFileSync(adminsPath, new Buffer.from(files.admins.datos, 'binary'));
+  }
+
+  console.log("Files were created successfully!");
+
+  // inserta los usuarios en la BD
+  await fileParserAdditionalUsers(deansPath, professorsPath, studentsPath, adminsPath)
+
+  console.log("Deleting files...");
+
+  if(deansPath) {
+    fs.unlinkSync(deansPath);
+  }
+
+  if(professorsPath) {
+    fs.unlinkSync(professorsPath);
+  }
+
+  if(studentsPath) {
+    fs.unlinkSync(studentsPath);
+  }
+
+  if(adminsPath) {
+    fs.unlinkSync(adminsPath);
+  }
+
+  console.log("Files were deleted!");
+
+  res.json({ status: 'ok' });
+});
+
+router.post('/additional-files', async (req, res) => {
+  files = req.body.files
+
+  const filesPath = global.appRoot + '/resources/static/assets/tmp/';
+  let careersPath = undefined
+  let semestersPath = undefined
+  let gpasPath = undefined
+
+  console.log('Creating files...');
+
+  if(files.careers) {
+    careersPath = filesPath + files.careers.nombre
+    fs.writeFileSync(careersPath, new Buffer.from(files.careers.datos, 'binary'));
+  }
+
+  if(files.semesters) {
+    semestersPath = filesPath + files.semesters.nombre
+    fs.writeFileSync(semestersPath, new Buffer.from(files.semesters.datos, 'binary'));
+  }
+
+  if(files.gpas) {
+    gpasPath = filesPath + files.gpas.nombre
+    fs.writeFileSync(gpasPath, new Buffer.from(files.gpas.datos, 'binary'));
+  }
+
+  console.log("Files were created successfully!");
+
+  // inserta los archivos adicionales en la BD
+  await fileParserAdditionalData(careersPath, semestersPath, gpasPath)
+
+  console.log("Deleting files...");
+
+  if(careersPath) {
+    fs.unlinkSync(careersPath);
+  }
+
+  if(semestersPath) {
+    fs.unlinkSync(semestersPath);
+  }
+
+  if(gpasPath) {
+    fs.unlinkSync(gpasPath);
+  }
+
+  console.log("Files were deleted!");
 
   res.json({ status: 'ok' });
 
@@ -120,6 +314,7 @@ let fileParser = async (filesPath) => {
   let deansFileName = "deansFile.csv"
   let professorsFileName = "professorsFile.csv"
   let studentsFileName = "studentsFile.csv"
+  let gpasFileName = "gpasFile.csv"
   let adminsFileName = "adminsFile.csv"
   let currentSemester = 1
   let idCounter = 1
@@ -200,6 +395,9 @@ let fileParser = async (filesPath) => {
 
   // Lee la lista de estudiantes
   let estudiantes = await csv().fromFile(filesPath + studentsFileName)
+
+  // Lee la lista de gpas
+  let gpas = await csv().fromFile(filesPath + gpasFileName)
 
   // Lee la lista de profesores
   let profesores = await csv().fromFile(filesPath + professorsFileName)
@@ -287,9 +485,17 @@ let fileParser = async (filesPath) => {
 
       await rolesUsuarioController.insertRolDeUsuario(idCounter, ESTUDIANTE_ROL)
 
-      await gpaPorSemestreController.insertGPA(currentSemester, idCounter, estudiante.gpa)
-
       insertedUsers.push(estudiante.correoInstitucional)
+    }
+  }
+
+  // Inserta los gpas por semestre en la BD
+  for(gpa of gpas) {
+    let userId = userExists(gpa.correoInstitucional, insertedUsers)
+    let semesterId = getSemestreId(gpa.semestre, semestres)
+
+    if(userId !== -1 && semesterId !== -1) {
+      await gpaPorSemestreController.insertGPA(semesterId, userId, gpa.gpa)
     }
   }
 
@@ -316,13 +522,7 @@ let getCarreraId = (item, itemList) => {
   length = itemList.length
   indx = -1
 
-  console.log("carrera: ", item);
-  console.log("carreras: ", itemList);
-
-  for(let i = 0; i < length; i++) {
-    console.log("Carrera: ", item);
-    console.log("carretas item type: ", itemList[i].carrera);
-  
+  for(let i = 0; i < length; i++) {  
     if(item === itemList[i].carrera) {
       indx = i + 1
       break
@@ -332,6 +532,21 @@ let getCarreraId = (item, itemList) => {
   return indx
 }
 
+let getSemestreId = (item, itemList) => {
+  length = itemList.length
+  indx = -1
+
+  for(let i = 0; i < length; i++) {
+    if(item === itemList[i].semestre) {
+      indx = i + 1
+      break
+    }
+  }
+
+  return indx
+}
+
+// verifies if user exists with email
 let userExists = (email, emailList) => {
   userId = -1
   idCounter = 0
@@ -347,5 +562,183 @@ let userExists = (email, emailList) => {
 
   return userId
 }
+
+let fileParserAdditionalUsers = async (deansPath, professorsPath, studentsPath, adminsPath) => {
+  const DECANO_ROL = 1
+  const PROFESOR_ROL = 2
+  const ESTUDIANTE_ROL = 3
+  const ADMIN_ROL = 4
+  const DEFAULT_FIRST_TIME_LOGIN_VALUE = 1
+  let admins = undefined;
+  let deans = undefined;
+  let professors = undefined;
+  let students = undefined
+
+  if(deansPath) {
+    // Lee la lista de decanos
+    deans = await csv().fromFile(deansPath)
+
+    // Inserta la lista de decanos en la BD
+    for(dean of deans) {
+      deanUser = await usuarioViewController.getUserByEmail(dean.correoInstitucional)
+
+      if(deanUser === undefined) {
+        lastUserId = await usuarioViewController.getLastUserId()
+        userId = lastUserId + 1
+
+        await usuarioController.insertUser(userId, dean, DEFAULT_FIRST_TIME_LOGIN_VALUE)
+
+        // solo inserta la carrera si esta existe
+        carreraId = await carreraController.getCarreraId(dean.carrera)
+        if(carreraId) {
+          // inserta decano
+          await decanoController.insertDecano(userId, carreraId)
+        }
+
+        await rolesUsuarioController.insertRolDeUsuario(userId, DECANO_ROL)
+      } else {
+        await rolesUsuarioController.insertRolDeUsuario(deanUser.id, DECANO_ROL)
+      }
+    }
+  }
+
+  if(professorsPath) {
+    // Lee la lista de profesores
+    professors = await csv().fromFile(professorsPath)
+
+    // Inserta la lista de decanos en la BD
+    for(professor of professors) {
+      professorUser = await usuarioViewController.getUserByEmail(professor.correoInstitucional)
+
+      if(professorUser === undefined) {
+        lastUserId = await usuarioViewController.getLastUserId()
+        userId = lastUserId + 1
+
+        await usuarioController.insertUser(userId, professor, DEFAULT_FIRST_TIME_LOGIN_VALUE)
+
+         // solo inserta la carrera si esta existe
+         carreraId = await carreraController.getCarreraId(professor.carrera)
+         if(carreraId) {
+           // inserta profesor
+           await profesorController.insertProfesor(userId, carreraId)
+         }
+
+        await rolesUsuarioController.insertRolDeUsuario(userId, PROFESOR_ROL)
+      } else {
+        await rolesUsuarioController.insertRolDeUsuario(professorUser.id, PROFESOR_ROL)
+      }
+    }
+  }
+
+  if(studentsPath) {
+    // Lee la lista de estudiantes
+    students = await csv().fromFile(studentsPath)
+
+    // Inserta la lista de decanos en la BD
+    for(student of students) {
+      studentUser = await usuarioViewController.getUserByEmail(student.correoInstitucional)
+
+      if(studentUser === undefined) {
+        lastUserId = await usuarioViewController.getLastUserId()
+        userId = lastUserId + 1
+
+        await usuarioController.insertUser(userId, student, DEFAULT_FIRST_TIME_LOGIN_VALUE)
+
+        tutor = await usuarioViewController.getUserByEmail(student.correoProfesor)
+
+        // solo inserta la carrera si esta existe
+         carreraId = await carreraController.getCarreraId(student.carrera)
+         if(carreraId) {
+           await estudianteController.insertEstudiante(userId, student, tutor.id, carreraId)
+         }
+
+        await rolesUsuarioController.insertRolDeUsuario(userId, ESTUDIANTE_ROL)
+      }
+    }
+  }
+
+  if(adminsPath) {
+    // Lee la lista de admins
+    admins = await csv().fromFile(adminsPath)
+
+    // Inserta la lista de admins en la BD
+    for(admin of admins) {
+      adminUser = await usuarioViewController.getUserByEmail(admin.correoInstitucional)
+
+      if(adminUser === undefined) {
+        lastUserId = await usuarioViewController.getLastUserId()
+        userId = lastUserId + 1
+
+        await usuarioController.insertUser(userId, admin, DEFAULT_FIRST_TIME_LOGIN_VALUE)
+
+        await rolesUsuarioController.insertRolDeUsuario(userId, ADMIN_ROL)
+      } else {
+        await rolesUsuarioController.insertRolDeUsuario(adminUser.id, ADMIN_ROL)
+      }
+    }
+  }
+}
+
+let fileParserAdditionalData = async (careersPath, semestersPath, gpasPath) => {
+  let careers = undefined;
+  let semesters = undefined;
+  let gpas = undefined
+
+  if(careersPath) {
+    // Lee las carreras
+    careers = await csv().fromFile(careersPath)
+
+    for(career of careers) {
+      careerItem = career.carrera
+      careerId = await carreraController.getCarreraId(careerItem)
+
+      // solo inserta una nueva carrera cuando esta no existe
+      if(careerId === undefined) {
+        lastCareerId = await carreraController.getLastCarreraId()
+        newCareerId = lastCareerId + 1
+
+        await carreraController.insertCarrera(newCareerId, careerItem)
+      }
+    }
+  }
+
+  if(semestersPath) {
+    // Lee los semestres
+    semesters = await csv().fromFile(semestersPath)
+
+    for(semester of semesters) {
+      semestreItem = semester.semestre
+      semesterId = await semestreController.getSemestreId(semestreItem)
+
+      // solo inserta un nuevo semestre cuando este no existe
+      if(semesterId === undefined) {
+        lastSemesterId = await semestreController.getLastSemestreId()
+
+        newSemesterId = lastSemesterId + 1
+
+        await semestreController.insertSemestre(newSemesterId, semestreItem, 0)
+      }
+    }
+  }
+
+  if(gpasPath) {
+    // Lee la lista de gpas
+    gpas = await csv().fromFile(gpasPath)
+
+    // Inserta los gpas por semestre en la BD
+    for(gpa of gpas) {
+      let user = await usuarioViewController.getUserByEmail(gpa.correoInstitucional)
+      let semesterId = await semestreController.getSemestreId(gpa.semestre)
+
+      if(user !== undefined && semesterId !== undefined) {
+        await gpaPorSemestreController.insertGPA(semesterId, user.id, gpa.gpa)
+      }
+    }
+
+  }
+  
+}
+
+
  
 module.exports = router;
