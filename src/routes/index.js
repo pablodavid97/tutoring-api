@@ -17,7 +17,6 @@ const semestreController = require('../controllers/semester.controller');
 const gpaPorSemestreController = require('../controllers/gpa-por-semestre.controller');
 const carreraController = require('../controllers/carrera.controller');
 const gpaViewController = require('../controllers/gpa-view.controller');
-const rolesUsuarioViewController = require('../controllers/roles-usuario-view.controller');
 
 router.get('/home', async (req, res) => {
   usuarioId = req.query.userId;
@@ -60,17 +59,6 @@ router.get('/home', async (req, res) => {
     }
 
     res.send({ studentInfo, tutor, gpa, gpaList });
-  } catch (error) {
-    logger.error(error.message);
-  }
-});
-
-router.get('/user-roles', async (req, res) => {
-  try {
-    usuarioId = req.query.userId;
-    userRoles = await rolesUsuarioViewController.getUserRoles(usuarioId);
-
-    res.send({ userRoles });
   } catch (error) {
     logger.error(error.message);
   }

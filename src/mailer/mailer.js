@@ -7,7 +7,12 @@ const options = {
     extname: '.hbs'
   },
   extName: '.hbs',
-  viewPath: 'src/views'
+  viewPath: 'src/views',
+  attachments: [{
+    filename: 'usfq-tutorias-logo.png',
+    path: global.srcDir + '/public/img/usfq-tutorias-logo.png',
+    cid: '@unique-logo-cid'
+  }]
 };
 
 let transport = nodemailer.createTransport({

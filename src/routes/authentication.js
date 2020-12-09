@@ -4,6 +4,7 @@ const router = express.Router();
 const usuarioController = require('../controllers/usuario.controller');
 const usuarioViewController = require('../controllers/usuario-view.controller');
 const imagenController = require('../controllers/imagen.controller');
+const rolesUsuarioViewController = require('../controllers/roles-usuario-view.controller');
 
 router.get('/user-by-email', async (req, res) => {
   try {
@@ -21,6 +22,17 @@ router.get('/user-by-id', async (req, res) => {
     user = await usuarioViewController.getUserById(req.query.userId);
 
     res.json(user);
+  } catch (error) {
+    logger.error(error.message);
+  }
+});
+
+router.get('/user-roles', async (req, res) => {
+  try {
+    usuarioId = req.query.userId;
+    userRoles = await rolesUsuarioViewController.getUserRoles(usuarioId);
+
+    res.send({ userRoles });
   } catch (error) {
     logger.error(error.message);
   }

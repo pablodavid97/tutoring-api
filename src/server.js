@@ -53,6 +53,9 @@ schedule.scheduleJob(rule, async () => {
   await reunionController.setDailyMeetings();
 });
 
+// public
+app.use(express.static(path.join(__dirname, 'public')));
+
 // ROUTES
 app.use(require('./routes/index'));
 app.use(require('./routes/authentication'));

@@ -14,7 +14,7 @@ router.post('/send-pwd-reset', async (req, res) => {
       to: process.env.MAIL_RECIPIENT,
       subject: 'USFQ Tutorías: Restablece tu contraseña',
       template: '../views/mailer/password-reset-email',
-      context: context
+      context: context,
     };
 
     const result = await sendEmail(message);
