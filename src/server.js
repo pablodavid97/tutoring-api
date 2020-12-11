@@ -1,8 +1,6 @@
 const express = require('express');
 const hbs = require('express-handlebars');
-const bodyParser = require('body-parser');
 const { http, log } = require('winston');
-const HttpStatusCode = require('http-status-codes');
 const { logger, expressLogger } = require('./utils/logger');
 const database = require('./models/connection-manager');
 const path = require('path');
